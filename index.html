@@ -1,0 +1,3330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Nutri1200 · Plan Mensual iOS</title>
+  <meta name="description" content="App iOS 18 para iPhone 16 Pro de uso mensual: calendario real de adherencia, control de peso, 3 menús rotatorios de batch cooking, medidas caseras y compra inteligente." />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Nutri1200" />
+  <meta name="theme-color" content="#000000" id="meta-theme-color" />
+  <link id="apple-icon" rel="apple-touch-icon" href="" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%2330D158'/%3E%3Cstop offset='100%25' stop-color='%230A84FF'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%230b0d10'/%3E%3Ccircle cx='32' cy='32' r='21' fill='none' stroke='url(%23g)' stroke-width='6'/%3E%3Ctext x='50%25' y='53%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='-apple-system,sans-serif' font-weight='800' font-size='13'%3E1200%3C/text%3E%3C/svg%3E" />
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Scoped theme tokens */
+    .ios-env {
+      --ios-bg: #000000;
+      --ios-bg-elevated: #1c1c1e;
+      --ios-bg-secondary: #2c2c2e;
+      --ios-bg-tertiary: #3a3a3c;
+      --ios-card: rgba(28, 28, 30, 0.92);
+      --ios-card-solid: #1c1c1e;
+      --ios-glass: rgba(22, 22, 24, 0.82);
+      --ios-border: rgba(255, 255, 255, 0.1);
+      --ios-separator: rgba(255, 255, 255, 0.08);
+      --ios-text: #ffffff;
+      --ios-text-secondary: #a1a1a8;
+      --ios-text-tertiary: #6c6c72;
+      --ios-green: #30d158;
+      --ios-green-soft: rgba(48, 209, 88, 0.16);
+      --ios-orange: #ff9f0a;
+      --ios-orange-soft: rgba(255, 159, 10, 0.16);
+      --ios-coral: #ff6961;
+      --ios-coral-soft: rgba(255, 105, 97, 0.16);
+      --ios-blue: #0a84ff;
+      --ios-blue-soft: rgba(10, 132, 255, 0.16);
+      --ios-cyan: #64d2ff;
+      --ios-cyan-soft: rgba(100, 210, 255, 0.16);
+      --ios-shadow: 0 8px 24px rgba(0, 0, 0, 0.42);
+      --ios-specular: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      --stage-bg: radial-gradient(circle at 50% 0%, #1f242d 0%, #0b0d11 72%);
+      color: var(--ios-text);
+      background: var(--ios-bg);
+      min-height: 100vh;
+    }
+
+    .ios-env[data-theme="light"] {
+      --ios-bg: #f2f2f7;
+      --ios-bg-elevated: #ffffff;
+      --ios-bg-secondary: #e5e5ea;
+      --ios-bg-tertiary: #d1d1d6;
+      --ios-card: rgba(255, 255, 255, 0.96);
+      --ios-card-solid: #ffffff;
+      --ios-glass: rgba(249, 249, 251, 0.88);
+      --ios-border: rgba(0, 0, 0, 0.08);
+      --ios-separator: rgba(60, 60, 67, 0.11);
+      --ios-text: #1c1c1e;
+      --ios-text-secondary: #5c5c62;
+      --ios-text-tertiary: #8e8e93;
+      --ios-green: #1f8a3b;
+      --ios-green-soft: rgba(31, 138, 59, 0.12);
+      --ios-orange: #c96a04;
+      --ios-orange-soft: rgba(201, 106, 4, 0.12);
+      --ios-coral: #dc2626;
+      --ios-coral-soft: rgba(220, 38, 38, 0.1);
+      --ios-blue: #007aff;
+      --ios-blue-soft: rgba(0, 122, 255, 0.11);
+      --ios-cyan: #0284c7;
+      --ios-cyan-soft: rgba(2, 132, 199, 0.12);
+      --ios-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+      --ios-specular: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+      --stage-bg: radial-gradient(circle at 50% 0%, #e5e8f0 0%, #cfd4df 100%);
+    }
+
+    /* Desktop Preview Frame vs Native Fullscreen on iPhone */
+    .preview-toolbar {
+      display: none;
+    }
+
+    .iphone-frame {
+      width: 100%;
+      min-height: 100vh;
+      background: var(--ios-bg);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .iphone-screen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      background: var(--ios-bg);
+    }
+
+    @media (min-width: 520px) {
+      .ios-env:not(.fullscreen-mode) {
+        background: var(--stage-bg);
+        padding: 16px 14px 28px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .preview-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        width: 100%;
+        max-width: 416px;
+        margin-bottom: 12px;
+        padding: 7px 14px;
+        border-radius: 999px;
+        background: rgba(28, 28, 30, 0.8);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        color: #f5f5f7;
+        font-size: 0.75rem;
+        font-weight: 600;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      }
+
+      .preview-toolbar-actions {
+        display: flex;
+        gap: 6px;
+      }
+
+      .toolbar-chip {
+        appearance: none;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+        border-radius: 999px;
+        padding: 4px 10px;
+        font-family: inherit;
+        font-size: 0.75rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .toolbar-chip:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .ios-env:not(.fullscreen-mode) .iphone-frame {
+        width: 406px;
+        min-height: 860px;
+        max-height: 884px;
+        border-radius: 56px;
+        padding: 11px;
+        background: linear-gradient(145deg, #b8b2a6 0%, #6e6a63 35%, #3d3b37 70%, #8c867a 100%);
+        box-shadow:
+          0 30px 70px rgba(0, 0, 0, 0.55),
+          0 0 0 1px rgba(255, 255, 255, 0.24) inset,
+          0 0 0 3px #1b1b1d inset;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .ios-env:not(.fullscreen-mode) .iphone-screen {
+        border-radius: 46px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        height: 842px;
+        scrollbar-width: none;
+        box-shadow: 0 0 0 2px #000000;
+      }
+
+      .ios-env:not(.fullscreen-mode) .iphone-screen::-webkit-scrollbar {
+        display: none;
+      }
+
+      .ios-env.fullscreen-mode .iphone-frame {
+        max-width: 490px;
+        margin: 0 auto;
+        border-radius: 28px;
+        overflow: hidden;
+        box-shadow: var(--ios-shadow);
+        border: 1px solid var(--ios-border);
+      }
+    }
+
+    /* Status Bar & Dynamic Island */
+    .status-bar {
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      padding: calc(10px + env(safe-area-inset-top)) 16px 8px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      background: var(--ios-glass);
+      backdrop-filter: saturate(180%) blur(22px);
+      -webkit-backdrop-filter: saturate(180%) blur(22px);
+    }
+
+    .status-time {
+      font-size: 0.875rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
+      padding-left: 4px;
+    }
+
+    .status-icons {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+      padding-right: 2px;
+      color: var(--ios-text);
+    }
+
+    .dynamic-island {
+      background: #000000;
+      color: #ffffff;
+      border-radius: 999px;
+      min-width: 132px;
+      max-width: 244px;
+      height: 34px;
+      padding: 0 13px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 9px;
+      box-shadow:
+        0 2px 10px rgba(0, 0, 0, 0.35),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+      cursor: pointer;
+      transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+      user-select: none;
+    }
+
+    .dynamic-island.expanded {
+      min-width: 224px;
+      height: 37px;
+      padding: 0 14px;
+      box-shadow:
+        0 6px 20px rgba(48, 209, 88, 0.22),
+        inset 0 0 0 1px rgba(48, 209, 88, 0.42);
+    }
+
+    .di-left {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .di-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #30d158;
+      box-shadow: 0 0 8px #30d158;
+      flex-shrink: 0;
+    }
+
+    .di-dot.orange {
+      background: #ff9f0a;
+      box-shadow: 0 0 8px #ff9f0a;
+    }
+
+    .di-right {
+      font-size: 0.75rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: #30d158;
+      white-space: nowrap;
+    }
+
+    .di-right.orange {
+      color: #ff9f0a;
+    }
+
+    /* App Navigation Header */
+    .ios-nav-header {
+      padding: 6px 16px 10px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .ios-eyebrow {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--ios-green);
+      margin-bottom: 2px;
+    }
+
+    .ios-large-title {
+      margin: 0;
+      font-size: 1.65rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .icon-circle-btn {
+      appearance: none;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      border: 1px solid var(--ios-border);
+      background: var(--ios-bg-elevated);
+      color: var(--ios-text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: var(--ios-specular);
+    }
+
+    .workout-pill-btn {
+      appearance: none;
+      border: 1px solid var(--ios-border);
+      background: var(--ios-bg-elevated);
+      color: var(--ios-text-secondary);
+      border-radius: 999px;
+      height: 35px;
+      padding: 0 11px;
+      font-family: inherit;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      box-shadow: var(--ios-specular);
+    }
+
+    .workout-pill-btn.active {
+      background: var(--ios-orange-soft);
+      border-color: var(--ios-orange);
+      color: var(--ios-orange);
+    }
+
+    /* Main Content */
+    .ios-content {
+      padding: 0 15px calc(104px + env(safe-area-inset-bottom));
+      flex: 1;
+    }
+
+    .tab-view {
+      display: none;
+      animation: iosFadeIn 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .tab-view.active {
+      display: block;
+    }
+
+    @keyframes iosFadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Cards & Section Headers */
+    .ios-card {
+      background: var(--ios-card);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--ios-border);
+      border-radius: 20px;
+      padding: 15px;
+      box-shadow: var(--ios-shadow), var(--ios-specular);
+      margin-bottom: 12px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin: 16px 4px 8px;
+    }
+
+    .section-header h2 {
+      margin: 0;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--ios-text-secondary);
+    }
+
+    .text-action-btn {
+      appearance: none;
+      border: none;
+      background: transparent;
+      color: var(--ios-blue);
+      font-family: inherit;
+      font-size: 0.8125rem;
+      font-weight: 650;
+      padding: 2px 4px;
+      cursor: pointer;
+    }
+
+    /* Week Navigation Bar (Multi-Month Ready) */
+    .week-nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 8px;
+      padding: 0 2px;
+    }
+
+    .week-nav-label {
+      font-size: 0.875rem;
+      font-weight: 750;
+      letter-spacing: -0.01em;
+    }
+
+    .week-nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .mini-pill-btn {
+      appearance: none;
+      border: 1px solid var(--ios-border);
+      background: var(--ios-bg-elevated);
+      color: var(--ios-text);
+      border-radius: 9px;
+      padding: 5px 9px;
+      font-family: inherit;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .mini-pill-btn.today-highlight {
+      color: var(--ios-blue);
+      background: var(--ios-blue-soft);
+      border-color: transparent;
+    }
+
+    /* Week Strip with Real Dates */
+    .week-strip {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+      margin-bottom: 12px;
+    }
+
+    .day-pill {
+      appearance: none;
+      border: 1px solid var(--ios-border);
+      background: var(--ios-bg-elevated);
+      color: var(--ios-text);
+      border-radius: 15px;
+      padding: 7px 2px 8px;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      box-shadow: var(--ios-specular);
+      transition: all 0.16s;
+      position: relative;
+    }
+
+    .day-pill .d-name {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--ios-text-secondary);
+    }
+
+    .day-pill .d-ring {
+      width: 27px;
+      height: 27px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      background: var(--ios-bg-secondary);
+      color: var(--ios-text);
+    }
+
+    .day-pill.selected {
+      background: var(--ios-text);
+      border-color: var(--ios-text);
+    }
+
+    .day-pill.selected .d-name {
+      color: var(--ios-bg);
+      font-weight: 700;
+    }
+
+    .day-pill.selected .d-ring {
+      background: var(--ios-green);
+      color: #000000;
+    }
+
+    .day-pill.done-full:not(.selected) .d-ring {
+      background: var(--ios-green-soft);
+      color: var(--ios-green);
+      box-shadow: inset 0 0 0 1.5px var(--ios-green);
+    }
+
+    .day-pill.done-part:not(.selected) .d-ring {
+      box-shadow: inset 0 0 0 1.5px var(--ios-orange);
+    }
+
+    /* Active Weekly Menu Selector Banner */
+    .menu-rotator-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 10px 13px;
+      border-radius: 15px;
+      background: var(--ios-bg-elevated);
+      border: 1px solid var(--ios-border);
+      margin-bottom: 12px;
+      font-size: 0.8125rem;
+    }
+
+    .menu-rotator-title {
+      font-weight: 700;
+      color: var(--ios-text);
+      display: block;
+    }
+
+    .menu-rotator-sub {
+      font-size: 0.75rem;
+      color: var(--ios-text-secondary);
+      display: block;
+    }
+
+    /* Hero Activity Rings Card */
+    .rings-hero {
+      display: grid;
+      grid-template-columns: 116px 1fr;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .rings-svg-wrap {
+      position: relative;
+      width: 116px;
+      height: 116px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .rings-svg-wrap svg {
+      transform: rotate(-90deg);
+      width: 116px;
+      height: 116px;
+    }
+
+    .ring-track {
+      fill: none;
+      stroke-width: 11;
+    }
+
+    .ring-value {
+      fill: none;
+      stroke-width: 11;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .rings-center-label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .rings-center-num {
+      font-size: 1.125rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+
+    .rings-center-unit {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--ios-text-secondary);
+      margin-top: 2px;
+    }
+
+    .hero-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .stat-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-bottom: 7px;
+      border-bottom: 1px solid var(--ios-separator);
+    }
+
+    .stat-line:last-child {
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .stat-tag {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--ios-text-secondary);
+    }
+
+    .stat-swatch {
+      width: 9px;
+      height: 9px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    .stat-numbers {
+      font-size: 0.9375rem;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-numbers small {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--ios-text-secondary);
+    }
+
+    /* Water / Hydration Widget */
+    .water-card {
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .water-title {
+      font-size: 0.875rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .water-sub {
+      font-size: 0.75rem;
+      color: var(--ios-text-secondary);
+      font-variant-numeric: tabular-nums;
+      margin-top: 2px;
+    }
+
+    .water-drops {
+      display: flex;
+      gap: 4px;
+    }
+
+    .drop-btn {
+      appearance: none;
+      width: 25px;
+      height: 31px;
+      border-radius: 8px;
+      border: 1px solid var(--ios-border);
+      background: var(--ios-bg-secondary);
+      color: var(--ios-text-tertiary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      cursor: pointer;
+      transition: all 0.16s;
+    }
+
+    .drop-btn.filled {
+      background: var(--ios-cyan-soft);
+      border-color: var(--ios-cyan);
+      color: var(--ios-cyan);
+    }
+
+    /* Meal Cards with Direct Swap Button & Household Measures */
+    .meal-ios-card {
+      padding: 14px 15px;
+      transition: opacity 0.2s;
+    }
+
+    .meal-ios-card.completed {
+      opacity: 0.7;
+    }
+
+    .meal-top-bar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .meal-badge-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .meal-squircle {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 1.2rem;
+    }
+
+    .meal-slot-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--ios-text-secondary);
+      display: block;
+    }
+
+    .meal-name-title {
+      margin: 2px 0 0;
+      font-size: 0.98rem;
+      font-weight: 750;
+      letter-spacing: -0.015em;
+      line-height: 1.22;
+    }
+
+    .meal-ios-card.completed .meal-name-title {
+      text-decoration: line-through;
+    }
+
+    .ios-check-circle {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 2px solid var(--ios-bg-tertiary);
+      background: transparent;
+      color: transparent;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .meal-ios-card.completed .ios-check-circle {
+      background: var(--ios-green);
+      border-color: var(--ios-green);
+      color: #000000;
+    }
+
+    .meal-ingredients {
+      list-style: none;
+      margin: 0;
+      padding: 10px 12px;
+      border-radius: 13px;
+      background: var(--ios-bg-secondary);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.8125rem;
+      cursor: pointer;
+    }
+
+    .meal-ingredients li {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .ing-gram {
+      font-weight: 750;
+      font-variant-numeric: tabular-nums;
+      color: var(--ios-text);
+      min-width: 64px;
+      flex-shrink: 0;
+    }
+
+    .ing-desc {
+      color: var(--ios-text-secondary);
+    }
+
+    .meal-bottom-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 10px;
+      font-size: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .macro-pills {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .m-pill {
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .m-pill.kcal {
+      background: var(--ios-orange-soft);
+      color: var(--ios-orange);
+    }
+
+    .m-pill.prot {
+      background: var(--ios-green-soft);
+      color: var(--ios-green);
+    }
+
+    .meal-swap-btn {
+      appearance: none;
+      border: 1px solid var(--ios-border);
+      background: var(--ios-bg-secondary);
+      color: var(--ios-blue);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-family: inherit;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .meal-swap-btn:active {
+      opacity: 0.75;
+    }
+
+    .meal-note {
+      margin-top: 8px;
+      font-size: 0.75rem;
+      color: var(--ios-text-secondary);
+      line-height: 1.38;
+    }
+
+    /* Night Defrost Banner */
+    .night-banner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 15px;
+      border-radius: 18px;
+      background: var(--ios-blue-soft);
+      border: 1px solid rgba(10, 132, 255, 0.24);
+      font-size: 0.8125rem;
+      line-height: 1.4;
+    }
+
+    .night-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: var(--ios-blue);
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ==================== TAB 2: MES & PESO ==================== */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .kpi-box {
+      background: var(--ios-card);
+      border: 1px solid var(--ios-border);
+      border-radius: 16px;
+      padding: 11px 10px;
+      box-shadow: var(--ios-specular);
+      text-align: center;
+    }
+
+    .kpi-val {
+      font-size: 1.15rem;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      display: block;
+    }
+
+    .kpi-lbl {
+      font-size: 0.75rem;
+      color: var(--ios-text-secondary);
+      margin-top: 2px;
+      display: block;
+    }
+
+    .cal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .cal-month-title {
+      font-size: 1rem;
+      font-weight: 800;
+      text-transform: capitalize;
+    }
+
+    .cal-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--ios-text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+    }
+
+    .cal-cell {
+      appearance: none;
+      border: 1px solid transparent;
+      background: var(--ios-bg-secondary);
+      color: var(--ios-text);
+      border-radius: 10px;
+      height: 38px;
+      font-family: inherit;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .cal-cell.empty {
+      background: transparent;
+      pointer-events: none;
+    }
+
+    .cal-cell.full-day {
+      background: var(--ios-green-soft);
+      color: var(--ios-green);
+      border-color: rgba(48, 209, 88, 0.35);
+    }
+
+    .cal-cell.part-day {
+      background: var(--ios-orange-soft);
+      color: var(--ios-orange);
+      border-color: rgba(255, 159, 10, 0.35);
+    }
+
+    .cal-cell.is-selected {
+      box-shadow: 0 0 0 2px var(--ios-text);
+    }
+
+    .cal-legend {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 10px;
+      font-size: 0.75rem;
+      color: var(--ios-text-secondary);
+    }
+
+    .cal-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    /* Weight Tracker */
+    .weight-form-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .ios-input {
+      flex: 1;
+      min-width: 0;
+      height: 40px;
+      border-radius: 11px;
+      border: 1px solid var(--ios-border);
+      background: var(--ios-bg-secondary);
+      color: var(--ios-text);
+      padding: 0 12px;
+      font-family: inherit;
+      font-size: 0.9375rem;
+      font-weight: 700;
+    }
+
+    .weight-history-list {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 165px;
+      overflow-y: auto;
+    }
+
+    .weight-entry {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: var(--ios-bg-secondary);
+      font-size: 0.8125rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Segmented Controls */
+    .ios-segmented {
+      display: grid;
+      background: var(--ios-bg-secondary);
+      padding: 3px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      gap: 3px;
+    }
+
+    .ios-segmented.cols-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .ios-segmented.cols-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .seg-btn {
+      appearance: none;
+      border: none;
+      background: transparent;
+      color: var(--ios-text-secondary);
+      font-family: inherit;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 7px 5px;
+      border-radius: 9px;
+      cursor: pointer;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .seg-btn.active {
+      background: var(--ios-card-solid);
+      color: var(--ios-text);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+    }
+
+    /* Tupper Stock & Timer */
+    .tupper-shelf {
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+    }
+
+    .tupper-row-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .tupper-row-title {
+      font-size: 0.875rem;
+      font-weight: 700;
+    }
+
+    .tupper-row-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--ios-green);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .tupper-boxes {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 7px;
+    }
+
+    .tupper-boxes.cols-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .tupper-box {
+      appearance: none;
+      border: 1px solid var(--ios-border);
+      background: var(--ios-bg-secondary);
+      color: var(--ios-text);
+      border-radius: 13px;
+      padding: 9px 4px;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tupper-box::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--ios-green);
+    }
+
+    .tupper-box.arroz-lid::before {
+      background: var(--ios-orange);
+    }
+
+    .tupper-box.eaten {
+      opacity: 0.45;
+      background: transparent;
+    }
+
+    .tupper-day {
+      font-size: 0.8125rem;
+      font-weight: 800;
+    }
+
+    .tupper-state {
+      font-size: 0.75rem;
+      color: var(--ios-text-secondary);
+      font-weight: 600;
+    }
+
+    .timer-layout {
+      display: grid;
+      grid-template-columns: 108px 1fr;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .timer-ring-box {
+      position: relative;
+      width: 108px;
+      height: 108px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .timer-ring-box svg {
+      transform: rotate(-90deg);
+      width: 108px;
+      height: 108px;
+    }
+
+    .timer-digits {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timer-sub-state {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--ios-orange);
+    }
+
+    .timer-right {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .timer-btn-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .ios-btn {
+      appearance: none;
+      border: none;
+      border-radius: 11px;
+      padding: 9px 13px;
+      font-family: inherit;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .ios-btn.primary {
+      background: var(--ios-green);
+      color: #000000;
+    }
+
+    .ios-btn.warning {
+      background: var(--ios-orange);
+      color: #000000;
+    }
+
+    .ios-btn.secondary {
+      background: var(--ios-bg-secondary);
+      color: var(--ios-text);
+    }
+
+    .preset-chips {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+    }
+
+    .preset-chip {
+      appearance: none;
+      border: 1px solid var(--ios-border);
+      background: var(--ios-bg-secondary);
+      color: var(--ios-text-secondary);
+      border-radius: 9px;
+      padding: 6px 8px;
+      font-family: inherit;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .preset-chip.active {
+      border-color: var(--ios-orange);
+      background: var(--ios-orange-soft);
+      color: var(--ios-orange);
+    }
+
+    /* Checklists & Steps */
+    .check-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 9px;
+      border-radius: 11px;
+      cursor: pointer;
+      user-select: none;
+      font-size: 0.8125rem;
+    }
+
+    .check-row.done {
+      color: var(--ios-text-secondary);
+      text-decoration: line-through;
+    }
+
+    .sq-check {
+      width: 21px;
+      height: 21px;
+      border-radius: 6px;
+      border: 1.75px solid var(--ios-text-tertiary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: transparent;
+      flex-shrink: 0;
+    }
+
+    .check-row.done .sq-check {
+      background: var(--ios-green);
+      border-color: var(--ios-green);
+      color: #000000;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 7px 2px;
+      font-size: 0.8125rem;
+      color: var(--ios-text-secondary);
+      line-height: 1.42;
+    }
+
+    .step-item strong {
+      color: var(--ios-text);
+    }
+
+    .step-badge {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--ios-bg-secondary);
+      color: var(--ios-text);
+      font-size: 0.75rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* Shopping List */
+    .cart-hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .cart-price-big {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.1;
+    }
+
+    .aisle-card {
+      padding: 4px 14px;
+    }
+
+    .aisle-item {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 11px 2px;
+      border-bottom: 1px solid var(--ios-separator);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .aisle-item:last-child {
+      border-bottom: none;
+    }
+
+    .aisle-item.checked {
+      opacity: 0.52;
+    }
+
+    .aisle-item.checked .aisle-name {
+      text-decoration: line-through;
+    }
+
+    .aisle-name {
+      font-size: 0.9rem;
+      font-weight: 650;
+      display: block;
+    }
+
+    .aisle-sub {
+      font-size: 0.75rem;
+      color: var(--ios-text-secondary);
+      display: block;
+      margin-top: 2px;
+    }
+
+    .aisle-price-tag {
+      padding: 4px 8px;
+      border-radius: 8px;
+      background: var(--ios-bg-secondary);
+      font-size: 0.8125rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    /* Portion Guide Grid */
+    .measure-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .measure-box {
+      padding: 11px 12px;
+      border-radius: 14px;
+      background: var(--ios-bg-secondary);
+      font-size: 0.8125rem;
+    }
+
+    .measure-box strong {
+      display: block;
+      color: var(--ios-text);
+      margin-bottom: 2px;
+    }
+
+    .measure-box span {
+      font-size: 0.75rem;
+      color: var(--ios-text-secondary);
+    }
+
+    /* Floating iOS 18 5-Tab Bar */
+    .ios-tabbar-wrap {
+      position: sticky;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 60;
+      padding: 8px 10px calc(10px + env(safe-area-inset-bottom));
+      background: linear-gradient(180deg, rgba(0,0,0,0) 0%, var(--ios-bg) 48%);
+      pointer-events: none;
+    }
+
+    .ios-tabbar {
+      pointer-events: auto;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 3px;
+      padding: 5px;
+      border-radius: 999px;
+      background: var(--ios-glass);
+      backdrop-filter: saturate(190%) blur(26px);
+      -webkit-backdrop-filter: saturate(190%) blur(26px);
+      border: 1px solid var(--ios-border);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), var(--ios-specular);
+    }
+
+    .tabbar-item {
+      appearance: none;
+      border: none;
+      background: transparent;
+      color: var(--ios-text-secondary);
+      border-radius: 999px;
+      padding: 6px 2px;
+      font-family: inherit;
+      font-size: 0.75rem;
+      font-weight: 650;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    .tabbar-item svg {
+      width: 19px;
+      height: 19px;
+    }
+
+    .tabbar-item.active {
+      background: var(--ios-bg-secondary);
+      color: var(--ios-green);
+    }
+  </style>
+</head>
+<body>
+  <div class="ios-env" id="ios-env" data-theme="dark">
+    <!-- Barra de vista previa (solo en escritorio) -->
+    <div class="preview-toolbar" aria-label="Controles de vista previa">
+      <span>iPhone 16 Pro · Plan Mensual</span>
+      <div class="preview-toolbar-actions">
+        <button type="button" class="toolbar-chip" id="btn-toggle-frame">Marco Titanio</button>
+        <button type="button" class="toolbar-chip" id="btn-toolbar-theme">OLED / Claro</button>
+      </div>
+    </div>
+
+    <div class="iphone-frame">
+      <div class="iphone-screen" id="iphone-screen">
+        <!-- iOS Status Bar + Dynamic Island -->
+        <div class="status-bar">
+          <div class="status-time" id="status-clock">09:41</div>
+
+          <div class="dynamic-island" id="dynamic-island" role="status" aria-live="polite">
+            <div class="di-left">
+              <span class="di-dot" id="di-dot"></span>
+              <span id="di-label">Déficit 1.200</span>
+            </div>
+            <div class="di-right" id="di-value">100g P</div>
+          </div>
+
+          <div class="status-icons" aria-hidden="true">
+            <svg width="15" height="11" viewBox="0 0 16 12" fill="currentColor">
+              <rect x="0" y="8" width="2.5" height="4" rx="0.8"/>
+              <rect x="4" y="5.5" width="2.5" height="6.5" rx="0.8"/>
+              <rect x="8" y="3" width="2.5" height="9" rx="0.8"/>
+              <rect x="12" y="0" width="2.5" height="12" rx="0.8"/>
+            </svg>
+            <svg width="14" height="11" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <path d="M1.5 4.2a10 10 0 0 1 13 0"/>
+              <path d="M4.2 7.2a6 6 0 0 1 7.6 0"/>
+              <circle cx="8" cy="10.2" r="1.2" fill="currentColor" stroke="none"/>
+            </svg>
+            <svg width="22" height="11" viewBox="0 0 25 12" fill="none">
+              <rect x="0.8" y="0.8" width="20.4" height="10.4" rx="3.2" stroke="currentColor" stroke-width="1.2" opacity="0.6"/>
+              <rect x="2.5" y="2.5" width="17" height="7" rx="1.8" fill="currentColor"/>
+              <path d="M23 4v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Header -->
+        <header class="ios-nav-header">
+          <div>
+            <div class="ios-eyebrow" id="nav-eyebrow">SEMANA EN CURSO · ~27 €/SEM</div>
+            <h1 class="ios-large-title" id="nav-title">Hoy</h1>
+          </div>
+          <div class="header-actions">
+            <button type="button" class="workout-pill-btn" id="btn-workout-mode" title="Sumar +150 kcal si hoy entrenas">
+              <span>⚡ +150 kcal</span>
+            </button>
+            <button type="button" class="icon-circle-btn" id="btn-theme-toggle" aria-label="Cambiar tema claro u oscuro">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="4"/>
+                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+              </svg>
+            </button>
+          </div>
+        </header>
+
+        <div class="ios-content">
+          <!-- ==================== VIEW 1: HOY ==================== -->
+          <main id="view-hoy" class="tab-view active" aria-label="Menú diario por fecha">
+            <!-- Real Date Week Navigator -->
+            <div class="week-nav-bar">
+              <span class="week-nav-label" id="week-range-label">Noviembre 2026</span>
+              <div class="week-nav-controls">
+                <button type="button" class="mini-pill-btn" id="btn-prev-week" aria-label="Semana anterior">‹ Sem.</button>
+                <button type="button" class="mini-pill-btn today-highlight" id="btn-go-today">Hoy</button>
+                <button type="button" class="mini-pill-btn" id="btn-next-week" aria-label="Semana siguiente">Sem. ›</button>
+              </div>
+            </div>
+
+            <div class="week-strip" id="week-strip" role="tablist" aria-label="Días de la semana"></div>
+
+            <!-- Selector rápido de Menú Semanal (Rotación Mensual) -->
+            <div class="menu-rotator-bar">
+              <div>
+                <span class="menu-rotator-title" id="active-pack-title">Menú Semana A · Lentejas y Arroz</span>
+                <span class="menu-rotator-sub">Rota entre los 3 menús cada semana del mes</span>
+              </div>
+              <button type="button" class="mini-pill-btn" id="btn-cycle-pack" style="color:var(--ios-green); border-color:var(--ios-green);">Cambiar menú ↻</button>
+            </div>
+
+            <!-- Dual Activity Rings Card -->
+            <section class="ios-card rings-hero" aria-label="Anillos de calorías y proteína">
+              <div class="rings-svg-wrap">
+                <svg viewBox="0 0 120 120">
+                  <circle class="ring-track" cx="60" cy="60" r="49" stroke="var(--ios-orange-soft)" />
+                  <circle class="ring-value" id="ring-kcal" cx="60" cy="60" r="49" stroke="var(--ios-orange)" stroke-dasharray="307.88" stroke-dashoffset="307.88" />
+                  <circle class="ring-track" cx="60" cy="60" r="34" stroke="var(--ios-green-soft)" />
+                  <circle class="ring-value" id="ring-prot" cx="60" cy="60" r="34" stroke="var(--ios-green)" stroke-dasharray="213.63" stroke-dashoffset="213.63" />
+                </svg>
+                <div class="rings-center-label">
+                  <span class="rings-center-num" id="ring-center-kcal">1.170</span>
+                  <span class="rings-center-unit" id="ring-center-sub">kcal rest.</span>
+                </div>
+              </div>
+
+              <div class="hero-stats">
+                <div class="stat-line">
+                  <span class="stat-tag"><span class="stat-swatch" style="background:var(--ios-orange)"></span>Calorías</span>
+                  <span class="stat-numbers" id="stat-kcal-text">0 <small>/ 1.170 kcal</small></span>
+                </div>
+                <div class="stat-line">
+                  <span class="stat-tag"><span class="stat-swatch" style="background:var(--ios-green)"></span>Proteína</span>
+                  <span class="stat-numbers" id="stat-prot-text">0 <small>/ 100 g</small></span>
+                </div>
+                <div class="stat-line">
+                  <span class="stat-tag"><span class="stat-swatch" style="background:var(--ios-blue)"></span>Racha mes</span>
+                  <span class="stat-numbers" id="stat-streak-text">0 días <small>cumplidos</small></span>
+                </div>
+              </div>
+            </section>
+
+            <!-- Hydration Tracker -->
+            <section class="ios-card water-card" aria-label="Hidratación">
+              <div>
+                <div class="water-title"><span style="color:var(--ios-cyan)">💧</span> Agua (2,0 L)</div>
+                <div class="water-sub" id="water-readout">0,00 L · Toca cada vaso (250 ml)</div>
+              </div>
+              <div class="water-drops" id="water-drops"></div>
+            </section>
+
+            <div class="section-header">
+              <h2 id="day-meals-title">Comidas del día</h2>
+              <button type="button" class="text-action-btn" id="btn-clear-day">Desmarcar hoy</button>
+            </div>
+
+            <div id="meals-list"></div>
+
+            <!-- Night Defrost Reminder -->
+            <div class="night-banner" id="night-banner">
+              <div class="night-icon">❄️</div>
+              <div id="night-banner-text"></div>
+            </div>
+          </main>
+
+          <!-- ==================== VIEW 2: MES & PESO ==================== -->
+          <section id="view-mes" class="tab-view" aria-label="Calendario mensual y evolución de peso">
+            <div class="kpi-grid">
+              <div class="kpi-box">
+                <span class="kpi-val" style="color:var(--ios-green);" id="kpi-month-days">0</span>
+                <span class="kpi-lbl">Días este mes</span>
+              </div>
+              <div class="kpi-box">
+                <span class="kpi-val" style="color:var(--ios-orange);" id="kpi-fat-lost">0,0 kg</span>
+                <span class="kpi-lbl">Grasa est. quemada</span>
+              </div>
+              <div class="kpi-box">
+                <span class="kpi-val" style="color:var(--ios-blue);" id="kpi-weight-diff">--</span>
+                <span class="kpi-lbl">Cambio en báscula</span>
+              </div>
+            </div>
+
+            <!-- Monthly Adherence Calendar -->
+            <div class="ios-card">
+              <div class="cal-header">
+                <button type="button" class="mini-pill-btn" id="btn-prev-month">‹ Mes ant.</button>
+                <span class="cal-month-title" id="cal-month-label">Noviembre 2026</span>
+                <button type="button" class="mini-pill-btn" id="btn-next-month">Mes sig. ›</button>
+              </div>
+              <div class="cal-weekdays">
+                <span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span>
+              </div>
+              <div class="cal-grid" id="cal-grid"></div>
+              <div class="cal-legend">
+                <span><i class="legend-dot" style="background:var(--ios-green)"></i>Día completo</span>
+                <span><i class="legend-dot" style="background:var(--ios-orange)"></i>En curso</span>
+                <span>Toca un día para ir a su menú</span>
+              </div>
+            </div>
+
+            <div class="section-header">
+              <h2>Control de Peso Mensual</h2>
+              <button type="button" class="text-action-btn" id="btn-set-goal-weight">Meta: <span id="goal-weight-label">65,0 kg</span></button>
+            </div>
+
+            <div class="ios-card">
+              <div style="font-size:0.8125rem; color:var(--ios-text-secondary);">
+                Pésate 1 vez por semana en ayunas. Tu historial queda guardado mes a mes:
+              </div>
+              <div class="weight-form-row">
+                <input type="number" step="0.1" min="35" max="250" placeholder="Ej: 72.4 kg" class="ios-input" id="input-weight" />
+                <button type="button" class="ios-btn primary" style="flex:0 0 auto;" id="btn-save-weight">Guardar peso</button>
+              </div>
+
+              <!-- Weight SVG Trend Chart -->
+              <div id="weight-chart-wrap" style="margin-top:12px;"></div>
+
+              <div class="weight-history-list" id="weight-history-list"></div>
+            </div>
+          </section>
+
+          <!-- ==================== VIEW 3: COCINA ==================== -->
+          <section id="view-cocina" class="tab-view" aria-label="Batch Cooking y Temporizador">
+            <div class="section-header" style="margin-top:4px;">
+              <h2>Elige qué cocinar este domingo</h2>
+            </div>
+
+            <!-- 3 Monthly Rotatable Batch Cooking Menus -->
+            <div class="ios-segmented cols-3" role="tablist" id="pack-selector-tabs">
+              <button type="button" class="seg-btn active" data-pack="0">Sem. 1 · Clásico</button>
+              <button type="button" class="seg-btn" data-pack="1">Sem. 2 · Pasta/Garb.</button>
+              <button type="button" class="seg-btn" data-pack="2">Sem. 3 · Curry/Alub.</button>
+            </div>
+
+            <div class="section-header">
+              <h2>Táperes de esta semana (7 comidas)</h2>
+              <button type="button" class="text-action-btn" id="btn-refill-tuppers">Rellenar 7</button>
+            </div>
+
+            <div class="ios-card tupper-shelf">
+              <div>
+                <div class="tupper-row-header">
+                  <span class="tupper-row-title" id="tupper-title-1">🥘 Olla 1 · Lentejas con pollo</span>
+                  <span class="tupper-row-badge" id="tupper-len-badge">4 / 4 listos</span>
+                </div>
+                <div class="tupper-boxes" id="tupper-grid-lentejas"></div>
+              </div>
+              <div>
+                <div class="tupper-row-header">
+                  <span class="tupper-row-title" id="tupper-title-2">🍲 Olla 2 · Arroz con pollo</span>
+                  <span class="tupper-row-badge" style="color:var(--ios-orange)" id="tupper-arr-badge">3 / 3 listos</span>
+                </div>
+                <div class="tupper-boxes cols-3" id="tupper-grid-arroz"></div>
+              </div>
+            </div>
+
+            <div class="section-header">
+              <h2>Recetas paso a paso (1h el domingo)</h2>
+              <button type="button" class="text-action-btn" id="btn-clear-ings">Desmarcar ingr.</button>
+            </div>
+
+            <div class="ios-segmented cols-3" role="tablist">
+              <button type="button" class="seg-btn active" data-recipe="olla1">Olla 1 (4 uds)</button>
+              <button type="button" class="seg-btn" data-recipe="olla2">Olla 2 (3 uds)</button>
+              <button type="button" class="seg-btn" data-recipe="cenas">Cenas 10 min</button>
+            </div>
+
+            <div id="recipe-olla1" class="ios-card"></div>
+            <div id="recipe-olla2" class="ios-card" style="display:none;"></div>
+            <div id="recipe-cenas" class="ios-card" style="display:none;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">
+                <strong style="font-size:1rem;">3 Cenas Rápidas (Alterna sin cocinar de más)</strong>
+                <span style="font-size:0.75rem; color:var(--ios-blue); font-weight:700;">~400 kcal</span>
+              </div>
+              <div class="step-item"><span class="step-badge">A</span><div><strong>Revuelto proteico:</strong> 300 g de verdura congelada (4 min microondas) + salteado en sartén con 1 cdta de aceite (5 ml), <strong>1 lata de atún al natural</strong> y <strong>2 huevos</strong>. + 1 mandarina.</div></div>
+              <div class="step-item"><span class="step-badge">B</span><div><strong>Merluza y patata al microondas:</strong> Pincha 1 patata mediana (130 g, 5 min al micro) + <strong>200 g de merluza</strong> (4 min al micro tapada con limón y ajo) + 250 g de verdura con 1 cdta de aceite.</div></div>
+              <div class="step-item"><span class="step-badge">C</span><div><strong>Pavo/Pollo plancha exprés:</strong> 160 g de pechuga a la plancha con especias + 300 g de salteado de verduras + 1 yogur proteico o 150 g de queso batido 0% de postre.</div></div>
+            </div>
+
+            <div class="section-header">
+              <h2>Temporizador de Cocina (Live Activity)</h2>
+            </div>
+
+            <div class="ios-card timer-layout">
+              <div class="timer-ring-box">
+                <svg viewBox="0 0 112 112">
+                  <circle cx="56" cy="56" r="47" fill="none" stroke="var(--ios-bg-secondary)" stroke-width="9" />
+                  <circle id="timer-svg-ring" cx="56" cy="56" r="47" fill="none" stroke="var(--ios-orange)" stroke-width="9" stroke-linecap="round" stroke-dasharray="295.31" stroke-dashoffset="0" />
+                </svg>
+                <div class="timer-digits">
+                  <span id="timer-clock-text">30:00</span>
+                  <span class="timer-sub-state" id="timer-clock-sub">Olla 1</span>
+                </div>
+              </div>
+
+              <div class="timer-right">
+                <div class="timer-btn-row">
+                  <button type="button" class="ios-btn primary" id="btn-timer-start">Iniciar</button>
+                  <button type="button" class="ios-btn secondary" id="btn-timer-reset">Reset</button>
+                </div>
+                <div class="preset-chips" id="timer-presets">
+                  <button type="button" class="preset-chip active" data-sec="1800" data-name="Olla 1 (30m)"><span>Olla 1</span><strong>30m</strong></button>
+                  <button type="button" class="preset-chip" data-sec="1080" data-name="Olla 2 (18m)"><span>Olla 2</span><strong>18m</strong></button>
+                  <button type="button" class="preset-chip" data-sec="300" data-name="Patata Micro"><span>Patata</span><strong>5m</strong></button>
+                  <button type="button" class="preset-chip" data-sec="240" data-name="Merluza Micro"><span>Merluza</span><strong>4m</strong></button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ==================== VIEW 4: COMPRA ==================== -->
+          <section id="view-compra" class="tab-view" aria-label="Lista de supermercado mensual">
+            <div class="ios-card">
+              <div class="cart-hero">
+                <div>
+                  <span style="font-size:0.75rem; font-weight:700; color:var(--ios-text-secondary); text-transform:uppercase;" id="shop-pack-label">PARA MENÚ SEMANA 1</span>
+                  <div class="cart-price-big" id="shop-main-price">~26,90 € / sem</div>
+                  <span style="font-size:0.75rem; color:var(--ios-text-secondary);" id="shop-sub-price">Semanas 2, 3 y 4 gastas ~23 € si ya tienes despensa</span>
+                </div>
+                <div style="text-align:right;">
+                  <span style="font-size:1.2rem; font-weight:800; color:var(--ios-green); font-variant-numeric:tabular-nums;" id="shop-counter-badge">0 / 14</span>
+                  <div style="font-size:0.75rem; color:var(--ios-text-secondary);">en el carro</div>
+                </div>
+              </div>
+              <div style="height:6px; border-radius:999px; background:var(--ios-bg-secondary); overflow:hidden; margin-top:12px;">
+                <div id="shop-progress-bar" style="height:100%; width:0%; background:var(--ios-green); transition:width 0.25s;"></div>
+              </div>
+            </div>
+
+            <div class="ios-segmented cols-2" role="group">
+              <button type="button" class="seg-btn active" id="btn-shop-all">Toda la lista</button>
+              <button type="button" class="seg-btn" id="btn-shop-pending">Falta comprar</button>
+            </div>
+
+            <div id="shop-aisles-container"></div>
+
+            <div style="text-align:center; margin-top:12px;">
+              <button type="button" class="text-action-btn" id="btn-shop-reset">Nueva semana: desmarcar frescos</button>
+            </div>
+          </section>
+
+          <!-- ==================== VIEW 5: GUÍA & MEDIDAS ==================== -->
+          <section id="view-guia" class="tab-view" aria-label="Guía mensual y medidas sin báscula">
+            <div class="section-header" style="margin-top:4px;">
+              <h2>Medidas rápidas sin pesar (Con cuchara/mano)</h2>
+            </div>
+
+            <div class="ios-card">
+              <div class="measure-grid">
+                <div class="measure-box">
+                  <strong>🥣 200 g Queso 0%</strong>
+                  <span>Casi medio bote (1 tarrina de 500 g te da para 2 días y medio).</span>
+                </div>
+                <div class="measure-box">
+                  <strong>🌾 35 g Copos avena</strong>
+                  <span>3 cucharadas soperas bien colmadas.</span>
+                </div>
+                <div class="measure-box">
+                  <strong>🫘 60 g Legumbre seca</strong>
+                  <span>1 tacita de café llena hasta el borde por ración.</span>
+                </div>
+                <div class="measure-box">
+                  <strong>🍚 50 g Arroz / Pasta</strong>
+                  <span>1 tacita de café rasa en crudo por táper.</span>
+                </div>
+                <div class="measure-box">
+                  <strong>🫒 5 ml Aceite (Cena)</strong>
+                  <span>1 cucharilla pequeña de postre (45 kcal).</span>
+                </div>
+                <div class="measure-box">
+                  <strong>🥦 300 g Verdura cong.</strong>
+                  <span>1 plato llano lleno hasta arriba (media bolsa).</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-header">
+              <h2>Cómo usar la web mes a mes</h2>
+            </div>
+
+            <div class="ios-card" style="display:flex; flex-direction:column; gap:10px;">
+              <div class="step-item" style="padding:0;">
+                <span class="step-badge" style="background:var(--ios-green-soft); color:var(--ios-green);">1</span>
+                <div><strong>Cada domingo:</strong> En <em>Hoy</em> o <em>Cocina</em> pulsa <strong>Cambiar menú ↻</strong> para alternar entre los 3 menús (Clásico, Pasta/Garbanzos o Curry/Alubias) y no aburrirte nunca.</div>
+              </div>
+              <div class="step-item" style="padding:0;">
+                <span class="step-badge" style="background:var(--ios-orange-soft); color:var(--ios-orange);">2</span>
+                <div><strong>Cada día en Hoy:</strong> Si un día te apetece variar el desayuno o la cena, pulsa <strong>🔄 Variar plato</strong> dentro de la propia comida: cambia el plato manteniendo las mismas calorías.</div>
+              </div>
+              <div class="step-item" style="padding:0;">
+                <span class="step-badge" style="background:var(--ios-blue-soft); color:var(--ios-blue);">3</span>
+                <div><strong>1 vez por semana:</strong> Registra tu peso en la pestaña <strong>Mes</strong>. Un déficit de 1.200 kcal equivale a perder entre <strong>0,4 y 0,6 kg de grasa por semana</strong> (~2 kg al mes).</div>
+              </div>
+            </div>
+
+            <div class="section-header">
+              <h2>Copia de seguridad (No pierdas tu historial)</h2>
+            </div>
+
+            <div class="ios-card">
+              <p style="margin:0 0 10px; font-size:0.8125rem; color:var(--ios-text-secondary);">
+                Tus días cumplidos y pesos se guardan en tu iPhone. Puedes copiar o restaurar una copia de seguridad cuando quieras:
+              </p>
+              <div style="display:flex; gap:8px;">
+                <button type="button" class="ios-btn secondary" id="btn-export-data">Copiar mis datos</button>
+                <button type="button" class="ios-btn secondary" id="btn-import-data">Restaurar copia</button>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- Floating iOS 18 5-Tab Bar -->
+        <div class="ios-tabbar-wrap">
+          <nav class="ios-tabbar" aria-label="Navegación principal">
+            <button type="button" class="tabbar-item active" data-target="hoy">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/>
+              </svg>
+              <span>Hoy</span>
+            </button>
+            <button type="button" class="tabbar-item" data-target="mes">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m9 16 2 2 4-4"/>
+              </svg>
+              <span>Mes</span>
+            </button>
+            <button type="button" class="tabbar-item" data-target="cocina">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2v4M8 4v2M16 4v2M4 10h16v8a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-8Z"/>
+              </svg>
+              <span>Cocina</span>
+            </button>
+            <button type="button" class="tabbar-item" data-target="compra">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
+              </svg>
+              <span>Compra</span>
+            </button>
+            <button type="button" class="tabbar-item" data-target="guia">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+              </svg>
+              <span>Guía</span>
+            </button>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      // Generate High-DPI iOS Home Screen Icon
+      try {
+        var c = document.createElement("canvas");
+        c.width = 180;
+        c.height = 180;
+        var ctx = c.getContext("2d");
+        if (ctx) {
+          ctx.fillStyle = "#0b0d10";
+          ctx.fillRect(0, 0, 180, 180);
+          ctx.lineWidth = 14;
+          ctx.strokeStyle = "#ff9f0a";
+          ctx.beginPath();
+          ctx.arc(90, 90, 62, -Math.PI / 2, Math.PI * 1.1);
+          ctx.stroke();
+          ctx.strokeStyle = "#30d158";
+          ctx.beginPath();
+          ctx.arc(90, 90, 43, -Math.PI / 2, Math.PI * 1.25);
+          ctx.stroke();
+          ctx.fillStyle = "#ffffff";
+          ctx.font = "800 28px -apple-system, BlinkMacSystemFont, sans-serif";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText("1200", 90, 91);
+          var link = document.getElementById("apple-icon");
+          if (link) link.href = c.toDataURL("image/png");
+        }
+      } catch (e) {}
+
+      // Clock
+      function updateClock() {
+        var now = new Date();
+        var hh = String(now.getHours()).padStart(2, "0");
+        var mm = String(now.getMinutes()).padStart(2, "0");
+        var el = document.getElementById("status-clock");
+        if (el) el.textContent = hh + ":" + mm;
+      }
+      updateClock();
+      setInterval(updateClock, 20000);
+
+      // Date Helpers (ISO YYYY-MM-DD local)
+      var MONTH_NAMES = [
+        "enero", "febrero", "marzo", "abril", "mayo", "junio",
+        "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+      ];
+      var SHORT_DAYS = ["L", "M", "X", "J", "V", "S", "D"];
+      var FULL_DAYS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+
+      function toISO(dateObj) {
+        var y = dateObj.getFullYear();
+        var m = String(dateObj.getMonth() + 1).padStart(2, "0");
+        var d = String(dateObj.getDate()).padStart(2, "0");
+        return y + "-" + m + "-" + d;
+      }
+
+      function fromISO(isoStr) {
+        var parts = isoStr.split("-");
+        return new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+      }
+
+      function getMonday(dateObj) {
+        var d = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
+        var day = d.getDay();
+        var diff = day === 0 ? -6 : 1 - day;
+        d.setDate(d.getDate() + diff);
+        return d;
+      }
+
+      function getDayOfWeekIdx(dateObj) {
+        var jsD = dateObj.getDay();
+        return jsD === 0 ? 6 : jsD - 1; // 0=Mon..6=Sun
+      }
+
+      // Persistent State (Multi-month ready)
+      var STORAGE_KEY = "nutri1200_monthly_v3";
+      var fallbackMem = {};
+      function loadState() {
+        try {
+          var raw = window.localStorage.getItem(STORAGE_KEY);
+          if (raw) return JSON.parse(raw);
+        } catch (e) {
+          if (fallbackMem[STORAGE_KEY]) return fallbackMem[STORAGE_KEY];
+        }
+        return {};
+      }
+      function saveState(st) {
+        fallbackMem[STORAGE_KEY] = st;
+        try {
+          window.localStorage.setItem(STORAGE_KEY, JSON.stringify(st));
+        } catch (e) {}
+      }
+
+      var todayDate = new Date();
+      var todayISO = toISO(todayDate);
+
+      var state = loadState();
+      if (!state.theme) state.theme = "dark";
+      if (!state.selectedISO) state.selectedISO = todayISO;
+      if (!state.calYear) state.calYear = todayDate.getFullYear();
+      if (typeof state.calMonth !== "number") state.calMonth = todayDate.getMonth();
+      if (typeof state.activePack !== "number") state.activePack = 0; // 0, 1, 2
+      if (!state.dayLogs) state.dayLogs = {}; // { "YYYY-MM-DD": { meals: {}, water: 0, workout: false, variants: {} } }
+      if (!state.tuppersEaten) state.tuppersEaten = {};
+      if (!state.ingDone) state.ingDone = {};
+      if (!state.shopDone) state.shopDone = {};
+      if (!state.shopFilter) state.shopFilter = "all";
+      if (!state.weights) state.weights = []; // [{ date: "YYYY-MM-DD", kg: 72.4 }]
+      if (!state.goalWeight) state.goalWeight = 65.0;
+
+      function getDayLog(iso) {
+        if (!state.dayLogs[iso]) {
+          state.dayLogs[iso] = { meals: {}, water: 0, workout: false, variants: {} };
+        }
+        if (!state.dayLogs[iso].variants) state.dayLogs[iso].variants = {};
+        return state.dayLogs[iso];
+      }
+
+      // 3 Monthly Rotatable Batch Cooking Packs
+      var BATCH_PACKS = [
+        {
+          id: 0,
+          name: "Menú 1 · Lentejas y Arroz con Pollo",
+          short: "Sem. 1 · Lentejas y Arroz",
+          olla1: {
+            title: "Lentejas estofadas con pollo",
+            kcal: 435,
+            prot: 44,
+            icon: "🥘",
+            ings: [
+              "240 g lentejas secas pardinas (4 tacitas de café)",
+              "500 g pechuga de pollo en dados",
+              "2 cebollas + 3 zanahorias en rodajas",
+              "200 g menestra congelada + 400 g tomate triturado (1/2 bote)",
+              "1 cda aceite (10 ml), pimentón dulce, ajo y comino"
+            ],
+            steps: [
+              "Dora los <strong>500 g de pollo en dados</strong> en la olla con <strong>1 cda sopera de aceite (10 ml)</strong> y sal.",
+              "Añade cebollas, zanahorias, menestra congelada, medio bote de tomate (400 g), pimentón y comino.",
+              "Echa los <strong>240 g de lentejas</strong> lavadas, cubre con agua y cuece <strong>30 min</strong> a fuego medio.",
+              "Déjalas caldosas (llenan el doble), reparte en <strong>4 táperes (L, M, J, S)</strong> y congela."
+            ],
+            portionItems: [
+              { g: "1 táper", t: "60 g lenteja en seco (1 tacita) + 125 g pollo" },
+              { g: "Verdura", t: "Cebolla, zanahoria, menestra y caldo" }
+            ]
+          },
+          olla2: {
+            title: "Arroz guisado con pollo y verdura",
+            kcal: 448,
+            prot: 39,
+            icon: "🍲",
+            ings: [
+              "150 g arroz redondo en seco (3 tacitas de café)",
+              "450 g pechuga de pollo en dados",
+              "450 g menestra congelada",
+              "400 g tomate triturado (el otro 1/2 bote) + 1 cebolla",
+              "1 cda aceite (10 ml), ajo en polvo, cúrcuma y pimienta"
+            ],
+            steps: [
+              "Sofríe los <strong>450 g de pollo</strong> y la cebolla picada con <strong>1 cda de aceite (10 ml)</strong>.",
+              "Añade 450 g de menestra congelada, el medio bote restante de tomate (400 g), ajo y cúrcuma.",
+              "Echa los <strong>150 g de arroz</strong>, el doble y medio de agua y cocina <strong>18 min</strong>.",
+              "Reparte en <strong>3 táperes (X, V, D)</strong>: congela 2 y deja 1 en nevera."
+            ],
+            portionItems: [
+              { g: "1 táper", t: "50 g arroz en seco (1 tacita) + 150 g pollo" },
+              { g: "150 g", t: "Menestra de verduras y sofrito natural" }
+            ]
+          },
+          shopLegume: { name: "Lenteja pardina seca (1 kg) + Arroz (1 kg)", sub: "Duran 4 semanas (usas 240 g + 150 g)", price: 0.60, pantry: true }
+        },
+        {
+          id: 1,
+          name: "Menú 2 · Garbanzos y Pasta Boloñesa Pollo",
+          short: "Sem. 2 · Garbanzos y Pasta",
+          olla1: {
+            title: "Potaje de garbanzos con pollo y espinacas",
+            kcal: 442,
+            prot: 43,
+            icon: "🧆",
+            ings: [
+              "2 botes de garbanzo cocido lavado (800 g escurridos)",
+              "500 g pechuga de pollo en dados pequeños",
+              "300 g espinacas o acelgas congeladas + 2 cebollas",
+              "400 g tomate natural triturado (1/2 bote)",
+              "1 cda aceite (10 ml), pimentón, ajo en polvo y comino"
+            ],
+            steps: [
+              "Sofríe el pollo en dados y las 2 cebollas con <strong>1 cda de aceite (10 ml)</strong> y pimentón.",
+              "Añade el medio bote de tomate (400 g), las espinacas congeladas y cubre con agua.",
+              "Echa los <strong>2 botes de garbanzos lavados</strong> y cuece <strong>20 min</strong> para trabar el caldo.",
+              "Reparte en <strong>4 táperes (L, M, J, S)</strong> y al congelador."
+            ],
+            portionItems: [
+              { g: "1 táper", t: "200 g garbanzo cocido + 125 g pechuga pollo" },
+              { g: "Verdura", t: "Espinacas, cebolla y caldo al pimentón" }
+            ]
+          },
+          olla2: {
+            title: "Macarrones integrales con pollo y verdura",
+            kcal: 445,
+            prot: 40,
+            icon: "🍝",
+            ings: [
+              "165 g macarrones integrales en seco (55 g por táper)",
+              "450 g pechuga de pollo picada en trocitos muy finos",
+              "400 g calabacín/menestra/champiñón + 1 cebolla",
+              "400 g tomate natural triturado (1/2 bote)",
+              "1 cda aceite (10 ml), orégano, albahaca y ajo en polvo"
+            ],
+            steps: [
+              "Saltea el pollo picado muy fino con la cebolla, verdura y <strong>1 cda de aceite</strong>.",
+              "Vierte los 400 g de tomate triturado y orégano; cocina 12 min como una boloñesa casera.",
+              "Cuece los <strong>165 g de pasta integral</strong> al dente (2 min menos de lo que indica el paquete).",
+              "Mezcla con la salsa, reparte en <strong>3 táperes (X, V, D)</strong> y congela."
+            ],
+            portionItems: [
+              { g: "1 táper", t: "55 g pasta integral seca + 150 g pollo picado" },
+              { g: "Salsa", t: "Tomate natural, verdura y orégano" }
+            ]
+          },
+          shopLegume: { name: "2 botes garbanzos cocidos + Pasta integral", sub: "Botes Hacendado/Freshona + 1 paq. pasta", price: 1.90, pantry: false }
+        },
+        {
+          id: 2,
+          name: "Menú 3 · Alubias al Pimentón y Arroz al Curry",
+          short: "Sem. 3 · Alubias y Curry",
+          olla1: {
+            title: "Alubias blancas guisadas con pollo y verdura",
+            kcal: 430,
+            prot: 42,
+            icon: "🍲",
+            ings: [
+              "2 botes de alubia blanca cocida (800 g escurridos)",
+              "500 g pechuga de pollo o pavo en dados",
+              "3 zanahorias + 2 cebollas + 200 g judías verdes",
+              "400 g tomate triturado (1/2 bote)",
+              "1 cda aceite (10 ml), pimentón dulce, laurel y ajo"
+            ],
+            steps: [
+              "Dora los 500 g de pollo con la cebolla, zanahoria y <strong>1 cda de aceite (10 ml)</strong>.",
+              "Añade el tomate triturado, pimentón, judías verdes y 3 vasos de agua; cuece 15 min.",
+              "Incorpora las <strong>alubias lavadas</strong> y hierve suave 10 min más.",
+              "Reparte en <strong>4 táperes (L, M, J, S)</strong> y congela."
+            ],
+            portionItems: [
+              { g: "1 táper", t: "200 g alubia cocida + 125 g pollo en dados" },
+              { g: "Verdura", t: "Zanahoria, judías verdes y caldo" }
+            ]
+          },
+          olla2: {
+            title: "Arroz al curry suave con pollo y brócoli",
+            kcal: 446,
+            prot: 39,
+            icon: "🍛",
+            ings: [
+              "150 g arroz redondo o basmati en seco",
+              "450 g pechuga de pollo en tiras",
+              "450 g brócoli y zanahoria en trozos pequeños",
+              "200 g queso fresco batido 0% (para salsa cremosa sin nata)",
+              "1 cda aceite (10 ml), curry en polvo, ajo y jengibre/pimienta"
+            ],
+            steps: [
+              "Dora el pollo con la cebolla, el curry en polvo y <strong>1 cda de aceite</strong>.",
+              "Añade el brócoli, la zanahoria, el arroz y el doble de agua; cocina 15 min.",
+              "Fuera del fuego, mezcla <strong>2 cucharadas de queso batido 0%</strong> para que quede cremoso.",
+              "Reparte en <strong>3 táperes (X, V, D)</strong> y congela."
+            ],
+            portionItems: [
+              { g: "1 táper", t: "50 g arroz en seco + 150 g pollo al curry" },
+              { g: "150 g", t: "Brócoli tierno y salsa ligera con queso 0%" }
+            ]
+          },
+          shopLegume: { name: "2 botes alubia cocida + Arroz + Curry", sub: "Gasto proporcional para la semana", price: 1.65, pantry: false }
+        }
+      ];
+
+      // Meal Alternatives for Direct 1-Tap Swap on Any Day
+      var BREAKFAST_VARIANTS = [
+        {
+          title: "Bol proteico 0% con avena y canela",
+          kcal: 222,
+          prot: 20,
+          icon: "🥣",
+          items: [
+            { g: "200 g", t: "Queso fresco batido 0% (casi medio bote)" },
+            { g: "35 g", t: "Copos de avena (3 cdas soperas colmadas)" },
+            { g: "Bebida", t: "Café solo o infusión sin azúcar" }
+          ]
+        },
+        {
+          title: "Tostada integral con huevo y pavo/atún",
+          kcal: 225,
+          prot: 19,
+          icon: "🍞",
+          items: [
+            { g: "40 g", t: "1 rebanada grande de pan 100% integral" },
+            { g: "Proteína", t: "1 huevo a la plancha + 1/2 lata atún (o 50g pavo)" },
+            { g: "Bebida", t: "Tomate rallado + café o té sin azúcar" }
+          ]
+        },
+        {
+          title: "Gachas calientes (Porridge) proteicas",
+          kcal: 222,
+          prot: 20,
+          icon: "🍯",
+          items: [
+            { g: "35 g", t: "Avena cocida 2 min al micro con agua y canela" },
+            { g: "200 g", t: "Queso batido 0% mezclado al sacar del micro" }
+          ]
+        }
+      ];
+
+      var SNACK_VARIANTS = [
+        {
+          title: "Mandarinas enteras saciantes",
+          kcal: 111,
+          prot: 2,
+          icon: "🍊",
+          items: [{ g: "3 uds", t: "Mandarinas pequeñas (~220 g) con toda su fibra" }]
+        },
+        {
+          title: "Manzana o pera grande a bocados",
+          kcal: 110,
+          prot: 1,
+          icon: "🍎",
+          items: [{ g: "1 ud", t: "Manzana grande (~210 g) con piel lavada" }]
+        },
+        {
+          title: "Kiwis o Plátano pequeño",
+          kcal: 108,
+          prot: 2,
+          icon: "🥝",
+          items: [{ g: "2 uds", t: "Kiwis medianos (o 1 plátano pequeño de 120 g)" }]
+        }
+      ];
+
+      var DINNER_VARIANTS = [
+        {
+          title: "Cena A · Revuelto de huevos, atún y verdura",
+          kcal: 395,
+          prot: 34,
+          icon: "🍳",
+          items: [
+            { g: "2 huevos", t: "+ 1 lata de atún al natural escurrida" },
+            { g: "300 g", t: "Brócoli o menestra (media bolsa) + 1 cdta aceite" },
+            { g: "Postre", t: "1 mandarina pequeña" }
+          ],
+          note: "Verdura 4 min al microondas y salteada 2 min en sartén con los huevos y el atún."
+        },
+        {
+          title: "Cena B · Merluza, patata al micro y verdura",
+          kcal: 400,
+          prot: 39,
+          icon: "🐟",
+          items: [
+            { g: "200 g", t: "Filetes de merluza con limón, ajo y perejil" },
+            { g: "130 g", t: "1 patata mediana pinchada (5 min microondas)" },
+            { g: "250 g", t: "Judías verdes o brócoli + 1 cdta aceite (5 ml)" }
+          ],
+          note: "La merluza tapada en un plato al microondas está lista en 4 minutos."
+        },
+        {
+          title: "Cena C · Pollo a la plancha y bol de verdura",
+          kcal: 390,
+          prot: 38,
+          icon: "🍗",
+          items: [
+            { g: "150 g", t: "Pechuga de pollo o pavo a la plancha con especias" },
+            { g: "300 g", t: "Salteado de verduras congeladas + 1 cdta aceite" },
+            { g: "100 g", t: "Queso fresco batido 0% con canela de postre" }
+          ],
+          note: "Ideal si te sobró pechuga o no te apetece pescado ni huevo esa noche."
+        }
+      ];
+
+      // Theme Controller
+      var envEl = document.getElementById("ios-env");
+      function applyTheme() {
+        envEl.setAttribute("data-theme", state.theme);
+        var metaTheme = document.getElementById("meta-theme-color");
+        if (metaTheme) metaTheme.setAttribute("content", state.theme === "dark" ? "#000000" : "#f2f2f7");
+      }
+      applyTheme();
+
+      function toggleTheme() {
+        state.theme = state.theme === "dark" ? "light" : "dark";
+        saveState(state);
+        applyTheme();
+        flashIsland(state.theme === "dark" ? "Modo Oscuro OLED" : "Modo Claro iOS", "Activo", false);
+      }
+
+      document.getElementById("btn-theme-toggle").addEventListener("click", toggleTheme);
+      document.getElementById("btn-toolbar-theme").addEventListener("click", toggleTheme);
+      document.getElementById("btn-toggle-frame").addEventListener("click", function () {
+        envEl.classList.toggle("fullscreen-mode");
+      });
+
+      // Dynamic Island
+      var islandEl = document.getElementById("dynamic-island");
+      var diLabel = document.getElementById("di-label");
+      var diValue = document.getElementById("di-value");
+      var diDot = document.getElementById("di-dot");
+      var islandTimeout = null;
+      var timerRunning = false;
+      var timerRemaining = 1800;
+      var timerDuration = 1800;
+      var timerName = "Olla 1 (30m)";
+
+      function formatMMSS(sec) {
+        var m = Math.floor(sec / 60);
+        var s = sec % 60;
+        return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+      }
+
+      function getDailyMealsForISO(isoStr) {
+        var dObj = fromISO(isoStr);
+        var dow = getDayOfWeekIdx(dObj); // 0=Mon..6=Sun
+        var log = getDayLog(isoStr);
+        var pack = BATCH_PACKS[state.activePack] || BATCH_PACKS[0];
+
+        var bIdx = (log.variants.desayuno || 0) % BREAKFAST_VARIANTS.length;
+        var sIdx = (log.variants.snack || 0) % SNACK_VARIANTS.length;
+        var defaultDinnerIdx = (dow === 1 || dow === 3 || dow === 5) ? 1 : 0; // Tue, Thu, Sat = B; Mon, Wed, Fri, Sun = A
+        var dIdx = typeof log.variants.cena === "number" ? (log.variants.cena % DINNER_VARIANTS.length) : defaultDinnerIdx;
+
+        // Default lunch: Mon(0), Tue(1), Thu(3), Sat(5) -> olla1; Wed(2), Fri(4), Sun(6) -> olla2
+        var defaultLunchOlla = (dow === 2 || dow === 4 || dow === 6) ? 1 : 0;
+        var lIdx = typeof log.variants.comida === "number" ? (log.variants.comida % 2) : defaultLunchOlla;
+        var lunchData = lIdx === 0 ? pack.olla1 : pack.olla2;
+
+        var bBase = BREAKFAST_VARIANTS[bIdx];
+        var sBase = SNACK_VARIANTS[sIdx];
+        var dBase = DINNER_VARIANTS[dIdx];
+
+        var wExtra = log.workout ? 1 : 0;
+
+        return [
+          {
+            id: "desayuno",
+            slot: "08:30 · Desayuno",
+            title: bBase.title + (wExtra ? " (+20g avena)" : ""),
+            kcal: bBase.kcal + (wExtra ? 75 : 0),
+            prot: bBase.prot + (wExtra ? 3 : 0),
+            color: "var(--ios-orange)",
+            bg: "var(--ios-orange-soft)",
+            icon: bBase.icon,
+            items: bBase.items
+          },
+          {
+            id: "snack",
+            slot: "11:30 o 17:30 · Fruta",
+            title: sBase.title,
+            kcal: sBase.kcal,
+            prot: sBase.prot,
+            color: "var(--ios-coral)",
+            bg: "var(--ios-coral-soft)",
+            icon: sBase.icon,
+            items: sBase.items
+          },
+          {
+            id: "comida",
+            slot: "14:15 · Comida de Táper (" + (lIdx === 0 ? "Olla 1" : "Olla 2") + ")",
+            title: lunchData.title,
+            kcal: lunchData.kcal,
+            prot: lunchData.prot,
+            color: lIdx === 0 ? "var(--ios-green)" : "var(--ios-orange)",
+            bg: lIdx === 0 ? "var(--ios-green-soft)" : "var(--ios-orange-soft)",
+            icon: lunchData.icon,
+            items: lunchData.portionItems,
+            note: "Sácalo del congelador la noche anterior y calienta 4 min en microondas."
+          },
+          {
+            id: "cena",
+            slot: "21:00 · Cena en 10 min",
+            title: dBase.title + (wExtra ? " (+1 huevo)" : ""),
+            kcal: dBase.kcal + (wExtra ? 75 : 0),
+            prot: dBase.prot + (wExtra ? 6 : 0),
+            color: "var(--ios-blue)",
+            bg: "var(--ios-blue-soft)",
+            icon: dBase.icon,
+            items: dBase.items,
+            note: dBase.note
+          }
+        ];
+      }
+
+      function refreshIslandDefault() {
+        if (timerRunning) {
+          islandEl.classList.add("expanded");
+          diDot.className = "di-dot orange";
+          diValue.className = "di-right orange";
+          diLabel.textContent = "⏱ " + timerName;
+          diValue.textContent = formatMMSS(timerRemaining);
+          return;
+        }
+        islandEl.classList.remove("expanded");
+        diDot.className = "di-dot";
+        diValue.className = "di-right";
+        var meals = getDailyMealsForISO(state.selectedISO);
+        var log = getDayLog(state.selectedISO);
+        var kcal = 0;
+        var prot = 0;
+        meals.forEach(function (m) {
+          if (log.meals[m.id]) {
+            kcal += m.kcal;
+            prot += m.prot;
+          }
+        });
+        diLabel.textContent = kcal > 0 ? kcal + " kcal hoy" : "Déficit 1.200";
+        diValue.textContent = prot + "g P";
+      }
+
+      function flashIsland(leftText, rightText, isOrange) {
+        if (timerRunning) return;
+        if (islandTimeout) clearTimeout(islandTimeout);
+        islandEl.classList.add("expanded");
+        diDot.className = isOrange ? "di-dot orange" : "di-dot";
+        diValue.className = isOrange ? "di-right orange" : "di-right";
+        diLabel.textContent = leftText;
+        diValue.textContent = rightText;
+        islandTimeout = setTimeout(refreshIslandDefault, 2000);
+      }
+
+      islandEl.addEventListener("click", function () {
+        if (timerRunning) {
+          switchTab("cocina");
+        } else {
+          switchTab("mes");
+        }
+      });
+
+      // Count completed days in a given month
+      function getMonthStats(year, monthIndex) {
+        var prefix = year + "-" + String(monthIndex + 1).padStart(2, "0") + "-";
+        var fullDays = 0;
+        var totalLoggedMeals = 0;
+        Object.keys(state.dayLogs).forEach(function (iso) {
+          var lg = state.dayLogs[iso];
+          var mCount = Object.keys(lg.meals || {}).filter(function (k) { return lg.meals[k]; }).length;
+          totalLoggedMeals += mCount;
+          if (iso.indexOf(prefix) === 0 && mCount >= 3) {
+            fullDays++;
+          }
+        });
+        // Each full day at ~1200 kcal creates ~450 kcal deficit -> ~0.06 kg fat per day
+        var totalCompletedDaysAllTime = Object.keys(state.dayLogs).filter(function (iso) {
+          var lg = state.dayLogs[iso];
+          return Object.keys(lg.meals || {}).filter(function (k) { return lg.meals[k]; }).length >= 3;
+        }).length;
+
+        return {
+          monthDays: fullDays,
+          allTimeDays: totalCompletedDaysAllTime,
+          estFatKg: (totalCompletedDaysAllTime * 450) / 7700
+        };
+      }
+
+      // Render HOY
+      function renderHoy() {
+        var selDate = fromISO(state.selectedISO);
+        var monday = getMonday(selDate);
+        var sunday = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + 6);
+
+        var rangeTxt = monday.getDate() + " – " + sunday.getDate() + " " + MONTH_NAMES[sunday.getMonth()] + " " + sunday.getFullYear();
+        document.getElementById("week-range-label").textContent = rangeTxt;
+
+        var strip = document.getElementById("week-strip");
+        strip.innerHTML = "";
+        for (var i = 0; i < 7; i++) {
+          (function (offset) {
+            var d = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + offset);
+            var iso = toISO(d);
+            var lg = state.dayLogs[iso];
+            var doneCount = lg && lg.meals ? Object.keys(lg.meals).filter(function (k) { return lg.meals[k]; }).length : 0;
+
+            var btn = document.createElement("button");
+            btn.type = "button";
+            var cls = "day-pill";
+            if (iso === state.selectedISO) cls += " selected";
+            if (doneCount >= 3) cls += " done-full";
+            else if (doneCount > 0) cls += " done-part";
+            btn.className = cls;
+
+            btn.innerHTML =
+              '<span class="d-name">' + SHORT_DAYS[offset] + '</span>' +
+              '<span class="d-ring">' + d.getDate() + '</span>';
+
+            btn.addEventListener("click", function () {
+              state.selectedISO = iso;
+              saveState(state);
+              renderHoy();
+              refreshIslandDefault();
+            });
+            strip.appendChild(btn);
+          })(i);
+        }
+
+        // Pack banner
+        var pack = BATCH_PACKS[state.activePack] || BATCH_PACKS[0];
+        document.getElementById("active-pack-title").textContent = pack.name;
+
+        // Workout button for selected day
+        var log = getDayLog(state.selectedISO);
+        document.getElementById("btn-workout-mode").classList.toggle("active", !!log.workout);
+
+        var meals = getDailyMealsForISO(state.selectedISO);
+        var totalKcal = 0;
+        var totalProt = 0;
+        var doneKcal = 0;
+        var doneProt = 0;
+
+        meals.forEach(function (m) {
+          totalKcal += m.kcal;
+          totalProt += m.prot;
+          if (log.meals[m.id]) {
+            doneKcal += m.kcal;
+            doneProt += m.prot;
+          }
+        });
+
+        var kcalCirc = 307.88;
+        var protCirc = 213.63;
+        document.getElementById("ring-kcal").style.strokeDashoffset = String(kcalCirc * (1 - Math.min(1, doneKcal / totalKcal)));
+        document.getElementById("ring-prot").style.strokeDashoffset = String(protCirc * (1 - Math.min(1, doneProt / totalProt)));
+
+        var rem = Math.max(0, totalKcal - doneKcal);
+        document.getElementById("ring-center-kcal").textContent = rem === 0 ? "¡Cumplido!" : rem;
+        document.getElementById("ring-center-sub").textContent = rem === 0 ? totalKcal + " kcal" : "kcal rest.";
+
+        document.getElementById("stat-kcal-text").innerHTML = doneKcal + " <small>/ " + totalKcal + " kcal</small>";
+        document.getElementById("stat-prot-text").innerHTML = doneProt + " <small>/ " + totalProt + " g</small>";
+
+        var mStats = getMonthStats(selDate.getFullYear(), selDate.getMonth());
+        document.getElementById("stat-streak-text").innerHTML = mStats.monthDays + " días <small>en " + MONTH_NAMES[selDate.getMonth()].slice(0, 3) + ".</small>";
+
+        var dowIdx = getDayOfWeekIdx(selDate);
+        var isToday = state.selectedISO === todayISO;
+        document.getElementById("day-meals-title").textContent =
+          FULL_DAYS[dowIdx] + " " + selDate.getDate() + " de " + MONTH_NAMES[selDate.getMonth()] + (isToday ? " (Hoy)" : "");
+
+        // Water
+        var waterCount = log.water || 0;
+        document.getElementById("water-readout").textContent =
+          (waterCount * 0.25).toFixed(2).replace(".", ",") + " L / 2,00 L (" + waterCount + " de 8 vasos)";
+        var dropsWrap = document.getElementById("water-drops");
+        dropsWrap.innerHTML = "";
+        for (var w = 1; w <= 8; w++) {
+          (function (glassIdx) {
+            var b = document.createElement("button");
+            b.type = "button";
+            b.className = "drop-btn" + (glassIdx <= waterCount ? " filled" : "");
+            b.innerHTML = '<svg width="12" height="15" viewBox="0 0 12 16" fill="currentColor"><path d="M6 1C6 1 1 6.8 1 10.2A5 5 0 0 0 11 10.2C11 6.8 6 1 6 1Z"/></svg>';
+            b.addEventListener("click", function () {
+              log.water = log.water === glassIdx ? glassIdx - 1 : glassIdx;
+              saveState(state);
+              renderHoy();
+            });
+            dropsWrap.appendChild(b);
+          })(w);
+        }
+
+        // Meals Cards with Direct Swap Button
+        var listEl = document.getElementById("meals-list");
+        listEl.innerHTML = "";
+        meals.forEach(function (meal) {
+          var isDone = !!log.meals[meal.id];
+          var card = document.createElement("article");
+          card.className = "ios-card meal-ios-card" + (isDone ? " completed" : "");
+
+          var ingsHtml = meal.items.map(function (it) {
+            return '<li><span class="ing-gram">' + it.g + '</span><span class="ing-desc">' + it.t + '</span></li>';
+          }).join("");
+
+          card.innerHTML =
+            '<div class="meal-top-bar" data-action="toggle">' +
+              '<div class="meal-badge-group">' +
+                '<div class="meal-squircle" style="background:' + meal.bg + '; color:' + meal.color + ';">' + meal.icon + '</div>' +
+                '<div>' +
+                  '<span class="meal-slot-label">' + meal.slot + '</span>' +
+                  '<h3 class="meal-name-title">' + meal.title + '</h3>' +
+                '</div>' +
+              '</div>' +
+              '<div class="ios-check-circle">' +
+                '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' +
+              '</div>' +
+            '</div>' +
+            '<ul class="meal-ingredients" data-action="toggle">' + ingsHtml + '</ul>' +
+            '<div class="meal-bottom-meta">' +
+              '<div class="macro-pills">' +
+                '<span class="m-pill kcal">' + meal.kcal + ' kcal</span>' +
+                '<span class="m-pill prot">' + meal.prot + ' g prot</span>' +
+              '</div>' +
+              '<button type="button" class="meal-swap-btn" data-action="swap">🔄 Variar plato</button>' +
+            '</div>' +
+            (meal.note ? '<div class="meal-note">' + meal.note + '</div>' : '');
+
+          card.querySelectorAll('[data-action="toggle"]').forEach(function (el) {
+            el.addEventListener("click", function () {
+              log.meals[meal.id] = !log.meals[meal.id];
+              saveState(state);
+              renderHoy();
+              renderMes();
+              flashIsland(
+                log.meals[meal.id] ? "✓ Comida marcada" : "Desmarcada",
+                "+" + meal.kcal + " kcal",
+                false
+              );
+            });
+          });
+
+          card.querySelector('[data-action="swap"]').addEventListener("click", function (ev) {
+            ev.stopPropagation();
+            var cur = log.variants[meal.id];
+            if (typeof cur !== "number") {
+              if (meal.id === "comida") {
+                cur = (dowIdx === 2 || dowIdx === 4 || dowIdx === 6) ? 1 : 0;
+              } else if (meal.id === "cena") {
+                cur = (dowIdx === 1 || dowIdx === 3 || dowIdx === 5) ? 1 : 0;
+              } else {
+                cur = 0;
+              }
+            }
+            log.variants[meal.id] = cur + 1;
+            saveState(state);
+            renderHoy();
+            flashIsland("🔄 Plato cambiado", "Mismas kcal", false);
+          });
+
+          listEl.appendChild(card);
+        });
+
+        // Tomorrow defrost reminder
+        var tomorrowDate = new Date(selDate.getFullYear(), selDate.getMonth(), selDate.getDate() + 1);
+        var tomMeals = getDailyMealsForISO(toISO(tomorrowDate));
+        var tomLunch = tomMeals[2];
+        document.getElementById("night-banner-text").innerHTML =
+          "<strong>Aviso para esta noche:</strong> saca del congelador a la nevera 1 táper de <strong>" + tomLunch.title + "</strong> para mañana (" + FULL_DAYS[getDayOfWeekIdx(tomorrowDate)] + ").";
+      }
+
+      // Week Navigation Handlers
+      document.getElementById("btn-prev-week").addEventListener("click", function () {
+        var d = fromISO(state.selectedISO);
+        d.setDate(d.getDate() - 7);
+        state.selectedISO = toISO(d);
+        saveState(state);
+        renderHoy();
+        refreshIslandDefault();
+      });
+
+      document.getElementById("btn-next-week").addEventListener("click", function () {
+        var d = fromISO(state.selectedISO);
+        d.setDate(d.getDate() + 7);
+        state.selectedISO = toISO(d);
+        saveState(state);
+        renderHoy();
+        refreshIslandDefault();
+      });
+
+      document.getElementById("btn-go-today").addEventListener("click", function () {
+        state.selectedISO = todayISO;
+        saveState(state);
+        renderHoy();
+        refreshIslandDefault();
+      });
+
+      document.getElementById("btn-workout-mode").addEventListener("click", function () {
+        var lg = getDayLog(state.selectedISO);
+        lg.workout = !lg.workout;
+        saveState(state);
+        renderHoy();
+        flashIsland(lg.workout ? "⚡ Día Entreno (+150)" : "Día Estándar", lg.workout ? "~1.325 kcal" : "~1.175 kcal", lg.workout);
+      });
+
+      document.getElementById("btn-clear-day").addEventListener("click", function () {
+        delete state.dayLogs[state.selectedISO];
+        saveState(state);
+        renderHoy();
+        renderMes();
+        refreshIslandDefault();
+      });
+
+      function setPack(idx) {
+        state.activePack = idx % BATCH_PACKS.length;
+        saveState(state);
+        renderHoy();
+        renderCocina();
+        renderCompra();
+        flashIsland("🍲 " + BATCH_PACKS[state.activePack].short, "Activo", false);
+      }
+
+      document.getElementById("btn-cycle-pack").addEventListener("click", function () {
+        setPack(state.activePack + 1);
+      });
+
+      // ==================== RENDER MES & PESO ====================
+      function renderMes() {
+        var y = state.calYear;
+        var m = state.calMonth;
+        document.getElementById("cal-month-label").textContent = MONTH_NAMES[m] + " " + y;
+
+        var stats = getMonthStats(y, m);
+        document.getElementById("kpi-month-days").textContent = String(stats.monthDays);
+        document.getElementById("kpi-fat-lost").textContent = "-" + stats.estFatKg.toFixed(1).replace(".", ",") + " kg";
+
+        if (state.weights.length >= 2) {
+          var firstW = state.weights[0].kg;
+          var lastW = state.weights[state.weights.length - 1].kg;
+          var diff = lastW - firstW;
+          var sign = diff > 0 ? "+" : "";
+          document.getElementById("kpi-weight-diff").textContent = sign + diff.toFixed(1).replace(".", ",") + " kg";
+        } else if (state.weights.length === 1) {
+          document.getElementById("kpi-weight-diff").textContent = state.weights[0].kg.toFixed(1).replace(".", ",") + " kg";
+        } else {
+          document.getElementById("kpi-weight-diff").textContent = "--";
+        }
+
+        // Build Calendar Grid
+        var firstDay = new Date(y, m, 1);
+        var startOffset = getDayOfWeekIdx(firstDay);
+        var daysInMonth = new Date(y, m + 1, 0).getDate();
+
+        var grid = document.getElementById("cal-grid");
+        grid.innerHTML = "";
+
+        for (var e = 0; e < startOffset; e++) {
+          var empty = document.createElement("div");
+          empty.className = "cal-cell empty";
+          grid.appendChild(empty);
+        }
+
+        for (var dayNum = 1; dayNum <= daysInMonth; dayNum++) {
+          (function (dNum) {
+            var iso = y + "-" + String(m + 1).padStart(2, "0") + "-" + String(dNum).padStart(2, "0");
+            var lg = state.dayLogs[iso];
+            var doneMeals = lg && lg.meals ? Object.keys(lg.meals).filter(function (k) { return lg.meals[k]; }).length : 0;
+
+            var btn = document.createElement("button");
+            btn.type = "button";
+            var cls = "cal-cell";
+            if (doneMeals >= 3) cls += " full-day";
+            else if (doneMeals > 0) cls += " part-day";
+            if (iso === state.selectedISO) cls += " is-selected";
+            btn.className = cls;
+            btn.textContent = String(dNum);
+
+            btn.addEventListener("click", function () {
+              state.selectedISO = iso;
+              saveState(state);
+              renderHoy();
+              renderMes();
+              switchTab("hoy");
+            });
+            grid.appendChild(btn);
+          })(dayNum);
+        }
+
+        // Weight Goal & Chart
+        document.getElementById("goal-weight-label").textContent = Number(state.goalWeight).toFixed(1).replace(".", ",") + " kg";
+        var chartWrap = document.getElementById("weight-chart-wrap");
+        var histList = document.getElementById("weight-history-list");
+        histList.innerHTML = "";
+
+        if (state.weights.length === 0) {
+          chartWrap.innerHTML = '<div style="padding:14px; border-radius:12px; background:var(--ios-bg-secondary); text-align:center; font-size:0.75rem; color:var(--ios-text-secondary);">Introduce tu peso actual arriba para iniciar la gráfica de evolución mensual.</div>';
+        } else {
+          // Render clean SVG trend line
+          var recent = state.weights.slice(-8);
+          var vals = recent.map(function (w) { return w.kg; }).concat([state.goalWeight]);
+          var minV = Math.min.apply(null, vals) - 1;
+          var maxV = Math.max.apply(null, vals) + 1;
+          var span = Math.max(1, maxV - minV);
+
+          var pts = recent.map(function (w, idx) {
+            var x = recent.length === 1 ? 150 : 24 + (idx * (252 / (recent.length - 1)));
+            var yPos = 78 - ((w.kg - minV) / span) * 58;
+            return { x: Math.round(x), y: Math.round(yPos), kg: w.kg };
+          });
+
+          var polyPoints = pts.map(function (p) { return p.x + "," + p.y; }).join(" ");
+          var goalY = Math.round(78 - ((state.goalWeight - minV) / span) * 58);
+
+          var circlesSvg = pts.map(function (p) {
+            return '<circle cx="' + p.x + '" cy="' + p.y + '" r="4" fill="var(--ios-green)" />' +
+                   '<text x="' + p.x + '" y="' + (p.y - 8) + '" fill="var(--ios-text)" font-size="9" font-weight="700" text-anchor="middle">' + p.kg.toFixed(1).replace(".", ",") + '</text>';
+          }).join("");
+
+          chartWrap.innerHTML =
+            '<svg viewBox="0 0 300 92" style="width:100%; height:96px; background:var(--ios-bg-secondary); border-radius:12px; display:block;">' +
+              '<line x1="16" y1="' + goalY + '" x2="284" y2="' + goalY + '" stroke="var(--ios-blue)" stroke-dasharray="4 4" stroke-width="1.2" opacity="0.7" />' +
+              '<text x="280" y="' + Math.max(12, goalY - 4) + '" fill="var(--ios-blue)" font-size="8" font-weight="700" text-anchor="end">Meta ' + state.goalWeight.toFixed(1).replace(".", ",") + ' kg</text>' +
+              (pts.length > 1 ? '<polyline fill="none" stroke="var(--ios-green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" points="' + polyPoints + '" />' : '') +
+              circlesSvg +
+            '</svg>';
+
+          state.weights.slice().reverse().forEach(function (entry, revIdx) {
+            var realIdx = state.weights.length - 1 - revIdx;
+            var row = document.createElement("div");
+            row.className = "weight-entry";
+            var d = fromISO(entry.date);
+            row.innerHTML =
+              '<span>' + d.getDate() + ' ' + MONTH_NAMES[d.getMonth()].slice(0, 3) + ' ' + d.getFullYear() + '</span>' +
+              '<div style="display:flex; align-items:center; gap:10px;">' +
+                '<strong>' + entry.kg.toFixed(1).replace(".", ",") + ' kg</strong>' +
+                '<button type="button" class="text-action-btn" style="color:var(--ios-coral); font-size:0.75rem;" data-del="' + realIdx + '">Borrar</button>' +
+              '</div>';
+            row.querySelector("[data-del]").addEventListener("click", function () {
+              state.weights.splice(realIdx, 1);
+              saveState(state);
+              renderMes();
+            });
+            histList.appendChild(row);
+          });
+        }
+      }
+
+      document.getElementById("btn-prev-month").addEventListener("click", function () {
+        state.calMonth--;
+        if (state.calMonth < 0) {
+          state.calMonth = 11;
+          state.calYear--;
+        }
+        saveState(state);
+        renderMes();
+      });
+
+      document.getElementById("btn-next-month").addEventListener("click", function () {
+        state.calMonth++;
+        if (state.calMonth > 11) {
+          state.calMonth = 0;
+          state.calYear++;
+        }
+        saveState(state);
+        renderMes();
+      });
+
+      document.getElementById("btn-save-weight").addEventListener("click", function () {
+        var inp = document.getElementById("input-weight");
+        var val = parseFloat(String(inp.value).replace(",", "."));
+        if (!isNaN(val) && val >= 30 && val <= 300) {
+          state.weights.push({ date: state.selectedISO, kg: Math.round(val * 10) / 10 });
+          inp.value = "";
+          saveState(state);
+          renderMes();
+          flashIsland("⚖️ Peso guardado", val.toFixed(1).replace(".", ",") + " kg", false);
+        }
+      });
+
+      document.getElementById("btn-set-goal-weight").addEventListener("click", function () {
+        var nextGoal = state.goalWeight <= 55 ? 75 : state.goalWeight - 2.5;
+        state.goalWeight = nextGoal;
+        saveState(state);
+        renderMes();
+        flashIsland("🎯 Nueva meta", nextGoal.toFixed(1).replace(".", ",") + " kg", false);
+      });
+
+      // ==================== RENDER COCINA ====================
+      var TUPPER_SLOTS = {
+        olla1: [
+          { id: "t1_lun", day: "Lun" },
+          { id: "t1_mar", day: "Mar" },
+          { id: "t1_jue", day: "Jue" },
+          { id: "t1_sab", day: "Sáb" }
+        ],
+        olla2: [
+          { id: "t2_mie", day: "Mié" },
+          { id: "t2_vie", day: "Vie" },
+          { id: "t2_dom", day: "Dom" }
+        ]
+      };
+
+      function renderCocina() {
+        var pack = BATCH_PACKS[state.activePack] || BATCH_PACKS[0];
+
+        document.querySelectorAll("#pack-selector-tabs .seg-btn").forEach(function (b) {
+          b.classList.toggle("active", parseInt(b.getAttribute("data-pack"), 10) === state.activePack);
+        });
+
+        document.getElementById("tupper-title-1").textContent = pack.olla1.icon + " Olla 1 · " + pack.olla1.title;
+        document.getElementById("tupper-title-2").textContent = pack.olla2.icon + " Olla 2 · " + pack.olla2.title;
+
+        function buildTuppers(gridId, badgeId, slots, isSecond) {
+          var g = document.getElementById(gridId);
+          g.innerHTML = "";
+          var avail = 0;
+          slots.forEach(function (s) {
+            var eaten = !!state.tuppersEaten[s.id];
+            if (!eaten) avail++;
+            var b = document.createElement("button");
+            b.type = "button";
+            b.className = "tupper-box" + (isSecond ? " arroz-lid" : "") + (eaten ? " eaten" : "");
+            b.innerHTML =
+              '<span class="tupper-day">' + s.day + '</span>' +
+              '<span class="tupper-state">' + (eaten ? "Comido ✓" : "❄️ Listo") + '</span>';
+            b.addEventListener("click", function () {
+              state.tuppersEaten[s.id] = !state.tuppersEaten[s.id];
+              saveState(state);
+              renderCocina();
+            });
+            g.appendChild(b);
+          });
+          document.getElementById(badgeId).textContent = avail + " / " + slots.length + " listos";
+        }
+
+        buildTuppers("tupper-grid-lentejas", "tupper-len-badge", TUPPER_SLOTS.olla1, false);
+        buildTuppers("tupper-grid-arroz", "tupper-arr-badge", TUPPER_SLOTS.olla2, true);
+
+        function renderOllaCard(cardId, ollaData, prefix, countLabel) {
+          var container = document.getElementById(cardId);
+          var ingsHtml = ollaData.ings.map(function (txt, idx) {
+            var key = state.activePack + "_" + prefix + "_" + idx;
+            var done = !!state.ingDone[key];
+            return '<div class="check-row' + (done ? ' done' : '') + '" data-ing="' + key + '">' +
+              '<span class="sq-check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>' +
+              '<span>' + txt + '</span>' +
+            '</div>';
+          }).join("");
+
+          var stepsHtml = ollaData.steps.map(function (st, idx) {
+            return '<div class="step-item"><span class="step-badge">' + (idx + 1) + '</span><div>' + st + '</div></div>';
+          }).join("");
+
+          container.innerHTML =
+            '<div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">' +
+              '<strong style="font-size:1rem;">' + ollaData.icon + ' ' + ollaData.title + '</strong>' +
+              '<span style="font-size:0.75rem; color:var(--ios-green); font-weight:700;">' + countLabel + ' · ' + ollaData.kcal + ' kcal</span>' +
+            '</div>' +
+            '<div style="margin-bottom:8px;">' + ingsHtml + '</div>' +
+            '<div style="border-top:1px solid var(--ios-separator); padding-top:8px;">' + stepsHtml + '</div>';
+
+          container.querySelectorAll("[data-ing]").forEach(function (row) {
+            row.addEventListener("click", function () {
+              var k = row.getAttribute("data-ing");
+              state.ingDone[k] = !state.ingDone[k];
+              saveState(state);
+              renderCocina();
+            });
+          });
+        }
+
+        renderOllaCard("recipe-olla1", pack.olla1, "o1", "4 táperes");
+        renderOllaCard("recipe-olla2", pack.olla2, "o2", "3 táperes");
+      }
+
+      document.querySelectorAll("#pack-selector-tabs .seg-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          setPack(parseInt(btn.getAttribute("data-pack"), 10));
+        });
+      });
+
+      document.querySelectorAll("[data-recipe]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var target = btn.getAttribute("data-recipe");
+          document.querySelectorAll("[data-recipe]").forEach(function (b) {
+            b.classList.toggle("active", b === btn);
+          });
+          ["olla1", "olla2", "cenas"].forEach(function (id) {
+            document.getElementById("recipe-" + id).style.display = id === target ? "block" : "none";
+          });
+        });
+      });
+
+      document.getElementById("btn-refill-tuppers").addEventListener("click", function () {
+        state.tuppersEaten = {};
+        saveState(state);
+        renderCocina();
+        flashIsland("❄️ 7 Táperes listos", "Semana cubierta", false);
+      });
+
+      document.getElementById("btn-clear-ings").addEventListener("click", function () {
+        state.ingDone = {};
+        saveState(state);
+        renderCocina();
+      });
+
+      // Timer
+      var timerInterval = null;
+      var TIMER_CIRC = 295.31;
+
+      function playAlarmSound() {
+        try {
+          var AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (!AudioCtx) return;
+          var ac = new AudioCtx();
+          [523.25, 659.25, 783.99, 1046.5].forEach(function (freq, i) {
+            var osc = ac.createOscillator();
+            var gain = ac.createGain();
+            osc.type = "triangle";
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(0.16, ac.currentTime + i * 0.14);
+            gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + i * 0.14 + 0.4);
+            osc.connect(gain);
+            gain.connect(ac.destination);
+            osc.start(ac.currentTime + i * 0.14);
+            osc.stop(ac.currentTime + i * 0.14 + 0.42);
+          });
+        } catch (e) {}
+      }
+
+      function renderTimer() {
+        document.getElementById("timer-clock-text").textContent = formatMMSS(timerRemaining);
+        document.getElementById("timer-clock-sub").textContent = timerRemaining === 0 ? "¡Listo!" : timerName;
+        var ratio = timerDuration > 0 ? timerRemaining / timerDuration : 0;
+        document.getElementById("timer-svg-ring").style.strokeDashoffset = String(TIMER_CIRC * (1 - ratio));
+
+        var startBtn = document.getElementById("btn-timer-start");
+        if (timerRunning) {
+          startBtn.textContent = "Pausar";
+          startBtn.className = "ios-btn warning";
+        } else {
+          startBtn.textContent = timerRemaining < timerDuration && timerRemaining > 0 ? "Reanudar" : "Iniciar";
+          startBtn.className = "ios-btn primary";
+        }
+        refreshIslandDefault();
+      }
+
+      function stopTimer() {
+        timerRunning = false;
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+      }
+
+      document.getElementById("btn-timer-start").addEventListener("click", function () {
+        if (timerRemaining === 0) timerRemaining = timerDuration;
+        if (timerRunning) {
+          stopTimer();
+          renderTimer();
+        } else {
+          timerRunning = true;
+          renderTimer();
+          timerInterval = setInterval(function () {
+            if (timerRemaining > 0) {
+              timerRemaining--;
+              if (timerRemaining === 0) {
+                stopTimer();
+                playAlarmSound();
+                flashIsland("🔔 ¡Cocción lista!", timerName, true);
+              }
+              renderTimer();
+            }
+          }, 1000);
+        }
+      });
+
+      document.getElementById("btn-timer-reset").addEventListener("click", function () {
+        stopTimer();
+        timerRemaining = timerDuration;
+        renderTimer();
+      });
+
+      document.querySelectorAll(".preset-chip").forEach(function (chip) {
+        chip.addEventListener("click", function () {
+          stopTimer();
+          timerDuration = parseInt(chip.getAttribute("data-sec"), 10);
+          timerRemaining = timerDuration;
+          timerName = chip.getAttribute("data-name");
+          document.querySelectorAll(".preset-chip").forEach(function (c) {
+            c.classList.toggle("active", c === chip);
+          });
+          renderTimer();
+        });
+      });
+
+      // ==================== RENDER COMPRA ====================
+      function getShoppingGroups() {
+        var pack = BATCH_PACKS[state.activePack] || BATCH_PACKS[0];
+        return [
+          {
+            title: "🥩 Compra Fresca y Congelada (Cada semana)",
+            items: [
+              { id: "s_pollo", name: "Pechuga de pollo entera (bandeja familiar)", sub: "1 kg · Trocear en casa (ahorras ~2 €/kg)", price: 6.50, pantry: false },
+              { id: "s_merluza", name: "Filetes de merluza ultracongelada", sub: "1 bolsa (600 g) · Para las 3 Cenas B", price: 4.20, pantry: false },
+              { id: "s_queso", name: "Queso fresco batido 0% (Hacendado / Milbona)", sub: "3 tarrinas de 500 g (1,5 kg en total)", price: 2.85, pantry: false },
+              { id: "s_fruta", name: "Mandarinas o manzanas (malla ahorro)", sub: "1,5 – 2 kg · 3 pequeñas al día", price: 2.80, pantry: false },
+              { id: "s_brocoli", name: "Brócoli ultracongelado", sub: "2 bolsas (~1,5 kg)", price: 2.00, pantry: false },
+              { id: "s_menestra", name: "Menestra / judías verdes / espinaca cong.", sub: "2 bolsas (~1 kg)", price: 2.00, pantry: false },
+              { id: "s_tomate", name: "Tomate natural triturado", sub: "1 bote grande de 800 g (400 g por olla)", price: 0.90, pantry: false }
+            ]
+          },
+          {
+            title: "🥫 Despensa Mensual (Te sobra para varias semanas)",
+            items: [
+              { id: "s_atun", name: "Atún claro al natural (pack 6 latas)", sub: "Usas 4 latas/sem, te sobran 2 cada semana", price: 3.80, pantry: true },
+              { id: "s_huevos", name: "Huevos frescos talla M/L (1 docena)", sub: "Usas 8 uds/sem, te sobran 4 para la siguiente", price: 2.20, pantry: true },
+              { id: "s_cebollas", name: "Malla de cebollas (1 kg)", sub: "Dura 2–3 semanas", price: 1.10, pantry: true },
+              { id: "s_zanahorias", name: "Bolsa de zanahorias (1 kg)", sub: "Dura 2–3 semanas", price: 0.85, pantry: true },
+              { id: "s_patatas", name: "Patatas medianas (3 uds / ~400 g)", sub: "Para las Cenas B al microondas", price: 0.65, pantry: true },
+              { id: "s_avena", name: "Copos de avena integrales (500 g)", sub: "1 paquete dura 2 semanas completas", price: 0.95, pantry: true },
+              { id: "s_legumbres", name: pack.shopLegume.name, sub: pack.shopLegume.sub, price: pack.shopLegume.price, pantry: pack.shopLegume.pantry }
+            ]
+          }
+        ];
+      }
+
+      function renderCompra() {
+        var pack = BATCH_PACKS[state.activePack] || BATCH_PACKS[0];
+        document.getElementById("shop-pack-label").textContent = "ADAPTADA A " + pack.short.toUpperCase();
+
+        var groups = getShoppingGroups();
+        var totalCount = 0;
+        var checkedCount = 0;
+        var pendingEuros = 0;
+
+        groups.forEach(function (g) {
+          g.items.forEach(function (it) {
+            totalCount++;
+            if (state.shopDone[it.id]) {
+              checkedCount++;
+            } else {
+              pendingEuros += it.price;
+            }
+          });
+        });
+
+        document.getElementById("shop-counter-badge").textContent = checkedCount + " / " + totalCount;
+        document.getElementById("shop-progress-bar").style.width = Math.round((checkedCount / totalCount) * 100) + "%";
+
+        if (checkedCount === totalCount) {
+          document.getElementById("shop-main-price").textContent = "¡Todo en casa!";
+          document.getElementById("shop-sub-price").textContent = "Listo para cocinar las 2 ollas del domingo";
+        } else {
+          document.getElementById("shop-main-price").textContent = "Falta ~" + pendingEuros.toFixed(2).replace(".", ",") + " €";
+          document.getElementById("shop-sub-price").textContent = "Marca lo que ya tengas en tu despensa este mes";
+        }
+
+        document.getElementById("btn-shop-all").classList.toggle("active", state.shopFilter === "all");
+        document.getElementById("btn-shop-pending").classList.toggle("active", state.shopFilter === "pending");
+
+        var wrap = document.getElementById("shop-aisles-container");
+        wrap.innerHTML = "";
+        var anyVisible = false;
+
+        groups.forEach(function (aisle) {
+          var visible = aisle.items.filter(function (it) {
+            return state.shopFilter === "all" || !state.shopDone[it.id];
+          });
+          if (!visible.length) return;
+          anyVisible = true;
+
+          var secHead = document.createElement("div");
+          secHead.className = "section-header";
+          secHead.innerHTML = "<h2>" + aisle.title + "</h2>";
+          wrap.appendChild(secHead);
+
+          var card = document.createElement("div");
+          card.className = "ios-card aisle-card";
+
+          visible.forEach(function (it) {
+            var isDone = !!state.shopDone[it.id];
+            var row = document.createElement("div");
+            row.className = "aisle-item" + (isDone ? " checked" : "");
+            row.innerHTML =
+              '<span class="sq-check" style="' + (isDone ? 'background:var(--ios-green);border-color:var(--ios-green);color:#000' : '') + '">' +
+                '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' +
+              '</span>' +
+              '<div style="flex:1; min-width:0;">' +
+                '<span class="aisle-name">' + it.name + '</span>' +
+                '<span class="aisle-sub">' + it.sub + '</span>' +
+              '</div>' +
+              '<span class="aisle-price-tag">' + it.price.toFixed(2).replace(".", ",") + ' €</span>';
+
+            row.addEventListener("click", function () {
+              state.shopDone[it.id] = !state.shopDone[it.id];
+              saveState(state);
+              renderCompra();
+            });
+            card.appendChild(row);
+          });
+
+          wrap.appendChild(card);
+        });
+
+        if (!anyVisible) {
+          wrap.innerHTML = '<div class="ios-card" style="text-align:center; padding:26px 14px; color:var(--ios-text-secondary);">🎉 ¡Ya tienes todos los ingredientes de la semana!</div>';
+        }
+      }
+
+      document.getElementById("btn-shop-all").addEventListener("click", function () {
+        state.shopFilter = "all";
+        saveState(state);
+        renderCompra();
+      });
+
+      document.getElementById("btn-shop-pending").addEventListener("click", function () {
+        state.shopFilter = "pending";
+        saveState(state);
+        renderCompra();
+      });
+
+      // Smart weekly reset: uncheck weekly fresh items while keeping pantry items if desired
+      document.getElementById("btn-shop-reset").addEventListener("click", function () {
+        var groups = getShoppingGroups();
+        groups[0].items.forEach(function (it) {
+          delete state.shopDone[it.id];
+        });
+        state.shopFilter = "all";
+        saveState(state);
+        renderCompra();
+        flashIsland("🛒 Frescos reiniciados", "Despensa conservada", false);
+      });
+
+      // Backup Export / Import
+      document.getElementById("btn-export-data").addEventListener("click", function () {
+        var json = JSON.stringify(state);
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(json).then(function () {
+            flashIsland("📋 Copia en portapapeles", "Guárdala en Notas", false);
+          }).catch(function () {
+            window.prompt("Copia este código para guardar tu progreso:", json);
+          });
+        } else {
+          window.prompt("Copia este código para guardar tu progreso:", json);
+        }
+      });
+
+      document.getElementById("btn-import-data").addEventListener("click", function () {
+        var raw = window.prompt("Pega aquí tu código de copia de seguridad:");
+        if (raw) {
+          try {
+            var parsed = JSON.parse(raw);
+            if (parsed && typeof parsed === "object") {
+              state = parsed;
+              saveState(state);
+              applyTheme();
+              renderHoy();
+              renderMes();
+              renderCocina();
+              renderCompra();
+              flashIsland("✓ Copia restaurada", "Historial al día", false);
+            }
+          } catch (e) {
+            flashIsland("Código no válido", "Error", true);
+          }
+        }
+      });
+
+      // Navigation Tab Switching
+      var TAB_TITLES = {
+        hoy: { eyebrow: "PLAN DIARIO · ~27 €/SEM", title: "Hoy" },
+        mes: { eyebrow: "HISTORIAL Y BÁSCULA", title: "Tu Progreso" },
+        cocina: { eyebrow: "3 MENÚS ROTATORIOS", title: "Batch Cooking" },
+        compra: { eyebrow: "FRESCOS VS. DESPENSA", title: "Supermercado" },
+        guia: { eyebrow: "MEDIDAS Y RESPALDO", title: "Guía Práctica" }
+      };
+
+      function switchTab(tabId) {
+        document.querySelectorAll(".tab-view").forEach(function (v) {
+          v.classList.toggle("active", v.id === "view-" + tabId);
+        });
+        document.querySelectorAll(".tabbar-item").forEach(function (b) {
+          b.classList.toggle("active", b.getAttribute("data-target") === tabId);
+        });
+        var meta = TAB_TITLES[tabId] || TAB_TITLES.hoy;
+        document.getElementById("nav-eyebrow").textContent = meta.eyebrow;
+        document.getElementById("nav-title").textContent = meta.title;
+        var scr = document.getElementById("iphone-screen");
+        if (scr) scr.scrollTop = 0;
+        window.scrollTo(0, 0);
+      }
+
+      document.querySelectorAll(".tabbar-item").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          switchTab(btn.getAttribute("data-target"));
+        });
+      });
+
+      // Initialize All Views
+      renderHoy();
+      renderMes();
+      renderCocina();
+      renderCompra();
+      renderTimer();
+      refreshIslandDefault();
+    })();
+  </script>
+</body>
+</html>
